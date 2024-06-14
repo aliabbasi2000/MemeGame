@@ -20,19 +20,60 @@
 
 ## API Server
 
-- POST `/api/something`: purpose
-  - request parameters and request body content
-  - response body content
-  - response status codes and possible errors
-- GET `/api/something`: purpose
-  - request parameters
-  - response body content
-  - response status codes and possible errors
-- PUT `/api/something`: purpose
-  - request parameters and request body content
-  - response body content
-  - response status codes and possible errors
-- ...
+- POST /api/login: Authenticates a user and starts a session.
+  - Request Body: { "username": "string", "password": "string" }
+  - Response: { "message": "Login successful", "user": { "id": "integer", "username": "string" }}
+  - response status codes:
+      - 200: OK - Login successful.
+      - 400: Bad Request - Invalid request body or missing parameters.
+      - 401: Unauthorized - Incorrect username or password.
+
+- POST /api/logout : Logs out the authenticated user and ends the session.
+  - Request Body: None
+  - Response: { "message": "Logout successful" }
+  - Response Status Codes:
+      - 200: OK - Logout successful.
+
+- GET /api/memes: Retrieves a random meme with associated captions for a new game round.
+  - request parameters: None
+  - Response: { "memeId": "integer", "imageUrl": "string", "captions": ["string", "string", ...] }
+  - response status codes:
+      - 200: OK - Meme retrieved successfully.
+      - 500: Internal Server Error - Server error while retrieving meme.
+
+- GET /api/memes/captions: Retrieves all possible captions.
+  - Query Parameters: None
+  - Response: { "captions": ["string", "string", ...] }
+  - response status codes:
+      - 200: OK - Captions retrieved successfully.
+      - 500: Internal Server Error - Server error while retrieving captions.
+
+- POST /api/games:  Starts a new game for the authenticated user.
+  - Request Body: None
+  - Response: { "gameId": "integer", "rounds": [] }
+  - response status codes:
+      - 200: OK - New game started successfully.
+      - 500: Internal Server Error - Server error while starting a new game.
+
+- POST /api/games/rounds:  Starts a new round in an existing game.
+  - Path Parameters: gameId (game ID), roundId (round ID)
+  - Request Body: { "caption": "string" }
+  - Response: { "correct": "boolean", "score": "integer", "bestCaptions": ["string", "string"] }
+  - response status codes:
+      - 200: OK - New round started successfully.
+      - 400: Bad Request - Invalid request body or parameters.
+      - 404: Not Found - Game or round not found.
+      - 500: Internal Server Error - Server error while starting a new round.
+      
+- GET /api/users/profile: Retrieves the profile and game history of a user.
+  - Path Parameters: userId (user ID)
+  - Response: { "user": { "id": "integer", "username": "string" }, "games": [{ "gameId": "integer", "rounds": [{ "meme": "string", "score": "integer" }] }] }
+  - response status code:
+      - 200: OK - Profile and game history retrieved successfully.
+      - 404: Not Found - User not found.
+      - 500: Internal Server Error - Server error while retrieving profile.
+
+
 
 ## Database Tables
 

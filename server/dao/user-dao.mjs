@@ -1,5 +1,5 @@
 /**  NEW **/
-import { db } from './db.mjs';
+import { db } from '../db.mjs';
 import crypto from 'crypto';
 
 export const getUser = (username, password) => {
