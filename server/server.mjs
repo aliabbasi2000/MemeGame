@@ -16,7 +16,7 @@ import session from 'express-session';
 const app = express();
 const port = 3001;
 
-// middleware
+// register the middlewares
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -77,22 +77,7 @@ app.use(passport.authenticate('session'));
 
 
 
-/* ROUTES */
-
-
-// GET /api/memes: Retrieves a random meme
-app.get('/api/memes', async (req, res) => {
-  try {
-    const meme = await getRandomMeme();
-    if (meme) {
-      res.json(meme);
-    } else {
-      res.status(404).json({ error: 'No meme found' });
-    }
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to retrieve a meme' });
-  }
-});
+/* ---------ROUTES---------- */
 
 
 // POST /api/sessions
@@ -128,12 +113,30 @@ app.get('/api/sessions/current', (req, res) => {
 });
 
 
-// DELETE /api/session/current -- NEW
+// DELETE /api/session/current - Log out
 app.delete('/api/sessions/current', (req, res) => {
   req.logout(() => {
     res.end();
   });
 });
+
+
+
+// GET /api/memes: Retrieves a random meme
+app.get('/api/memes', async (req, res) => {
+  try {
+    const meme = await getRandomMeme();
+    if (meme) {
+      res.json(meme);
+    } else {
+      res.status(404).json({ error: 'No meme found' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to retrieve a meme' });
+  }
+});
+
+
 
 // far partire il server
 app.listen(port, () => { console.log(`API server started at http://localhost:${port}`); });

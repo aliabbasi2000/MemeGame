@@ -21,8 +21,8 @@
 ## API Server
 
 - POST /api/login: Authenticates a user and starts a session.
-  - Request Body: { "username": "string", "password": "string" }
-  - Response: { "message": "Login successful", "user": { "id": "integer", "username": "string" }}
+  - Request Body: { username: string, password: string }
+  - Response: { message: Login successful, user: { id: integer, username: string }}
   - response status codes:
       - 200: OK - Login successful.
       - 400: Bad Request - Invalid request body or missing parameters.
@@ -30,44 +30,55 @@
 
 - POST /api/logout : Logs out the authenticated user and ends the session.
   - Request Body: None
-  - Response: { "message": "Logout successful" }
+  - Response: { message: Logout successful }
   - Response Status Codes:
       - 200: OK - Logout successful.
 
-- GET /api/memes: Retrieves a random meme with associated captions for a new game round.
+- GET /api/meme: Retrieves a random meme picture.
   - request parameters: None
-  - Response: { "memeId": "integer", "imageUrl": "string", "captions": ["string", "string", ...] }
+  - Response: { meme: { id: integet, url: string } }
   - response status codes:
       - 200: OK - Meme retrieved successfully.
       - 500: Internal Server Error - Server error while retrieving meme.
 
-- GET /api/memes/captions: Retrieves all possible captions.
-  - Query Parameters: None
-  - Response: { "captions": ["string", "string", ...] }
-  - response status codes:
+- GET /api/meme/captions: Retrieves seven possible captions for a given meme picture.
+  - request Parameters: memeId
+  - Response: { captions: [{ id: integer, text: string }, { id: integer, text: string },...] }
       - 200: OK - Captions retrieved successfully.
       - 500: Internal Server Error - Server error while retrieving captions.
 
-- POST /api/games:  Starts a new game for the authenticated user.
+- POST /api/game/start:  Starts a new game for the authenticated user.
   - Request Body: None
-  - Response: { "gameId": "integer", "rounds": [] }
+  - Response: { gameId: integer, meme: { id: integer, url: string }, captions: [{ id: integer, text: string }] }
   - response status codes:
       - 200: OK - New game started successfully.
       - 500: Internal Server Error - Server error while starting a new game.
 
-- POST /api/games/rounds:  Starts a new round in an existing game.
-  - Path Parameters: gameId (game ID), roundId (round ID)
-  - Request Body: { "caption": "string" }
-  - Response: { "correct": "boolean", "score": "integer", "bestCaptions": ["string", "string"] }
+- POST /api/game/round:  Starts a new round in an existing game.
+  - Path Parameters: gameId,
+  - Request Body: None
+  - Response:{ round: integer, meme: { id: integer, url: string }, captions: [{ id: integer, text: string }] }
   - response status codes:
       - 200: OK - New round started successfully.
       - 400: Bad Request - Invalid request body or parameters.
       - 404: Not Found - Game or round not found.
       - 500: Internal Server Error - Server error while starting a new round.
+
+
+- POST /api/game/round/guess:  Submits a guess for a round.
+  - Path Parameters: gameId, roundId 
+  - Request Body: { captionId: integer }
+  - Response:{ correct: boolean, score: integer, bestCaptions: [{ id: integer, text: string }] }
+  - response status codes:
+      - 200: OK - The guess was successfully processed. (It was Correct OR Incorrect)
+      - 400: Bad Request - Invalid request body or parameters.
+      - 404: Not Found - Game or round not found.
+      - 500: Internal Server Error - Server error while starting a new round.
+
       
-- GET /api/users/profile: Retrieves the profile and game history of a user.
+- GET /api/users/profile: Retrieves the profile information and game history of the authenticated user.
   - Path Parameters: userId (user ID)
-  - Response: { "user": { "id": "integer", "username": "string" }, "games": [{ "gameId": "integer", "rounds": [{ "meme": "string", "score": "integer" }] }] }
+  - Response: { user: { id: integer, username: string, totalScore: integer }, games: [{ id: integer, date: string, score: integer, rounds: [{ meme: { id: integer, url: string }, score: integer, correctCaption: string, guessedCaption: string }] }] }
   - response status code:
       - 200: OK - Profile and game history retrieved successfully.
       - 404: Not Found - User not found.
@@ -77,9 +88,14 @@
 
 ## Database Tables
 
-- Table `users` - short description of its contents
-- Table `something` - short description of its contents
-- ...
+- Table `users` - has the user information
+  - id, username, password, salt
+- Table `memes` - has the id of meme and a url of the meme image in the public folder of the client
+  - id, url
+- Table `captions` - has the id of captions and the text of it
+  - id, caption
+- Table `meme_caption` - a middle table thatShows the N to N relationship between captions and memes
+  - meme_id, caption_id
 
 
 ## Screenshots
