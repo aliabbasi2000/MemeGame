@@ -50,7 +50,7 @@ const logOut = async() => {
 // Function to get a random meme
 export const getRandomMeme = async () => {
   try {
-    const response = await fetch(SERVER_URL + '/api/memes');
+    const response = await fetch(SERVER_URL + '/api/meme');
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }

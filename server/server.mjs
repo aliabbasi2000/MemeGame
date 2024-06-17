@@ -122,8 +122,8 @@ app.delete('/api/sessions/current', (req, res) => {
 
 
 
-// GET /api/memes: Retrieves a random meme
-app.get('/api/memes', async (req, res) => {
+// GET /api/meme: Retrieves a random meme
+app.get('/api/meme', async (req, res) => {
   try {
     const meme = await getRandomMeme();
     if (meme) {
@@ -138,5 +138,5 @@ app.get('/api/memes', async (req, res) => {
 
 
 
-// far partire il server
+// start the server
 app.listen(port, () => { console.log(`API server started at http://localhost:${port}`); });
