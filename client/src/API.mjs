@@ -2,7 +2,7 @@
 
 const SERVER_URL = 'http://localhost:3001';
 
-// NEW
+// logIn
 const logIn = async (credentials) => {
   const response = await fetch(SERVER_URL + '/api/sessions', {
     method: 'POST',
@@ -22,7 +22,7 @@ const logIn = async (credentials) => {
   }
 };
 
-// NEW
+// getUserInfo
 const getUserInfo = async () => {
   const response = await fetch(SERVER_URL + '/api/sessions/current', {
     credentials: 'include',
@@ -35,7 +35,7 @@ const getUserInfo = async () => {
   }
 };
 
-// NEW
+// Logout
 const logOut = async() => {
   const response = await fetch(SERVER_URL + '/api/sessions/current', {
     method: 'DELETE',
@@ -47,7 +47,7 @@ const logOut = async() => {
 
 
 
-// Function to get a random meme
+// Get a random meme
 export const getRandomMeme = async () => {
   try {
     const response = await fetch(SERVER_URL + '/api/meme');
@@ -62,5 +62,20 @@ export const getRandomMeme = async () => {
   }
 };
 
-const API = { logIn, logOut, getUserInfo, getRandomMeme};
+
+const getCaptionsByMemeId = async (memeId) => {
+  try {
+    const response = await fetch(`${SERVER_URL}/api/meme/${memeId}/captions`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return data.captions;
+  } catch (error) {
+    console.error('Error fetching captions:', error);
+    throw error;
+  }
+};
+
+const API = { logIn, logOut, getUserInfo, getRandomMeme, getCaptionsByMemeId};
 export default API;
