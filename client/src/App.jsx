@@ -7,7 +7,7 @@ import NotFound from './components/NotFoundComponent';
 import { LoginForm } from './components/AuthComponents';
 import API from './API.mjs';
 import MemeGame from './components/MemeGame';
-
+import Game from "./components/Game";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -24,7 +24,7 @@ function App() {
     checkAuth();
   }, []);
 
-  // NEW
+  // Login
   const handleLogin = async (credentials) => {
     try {
       const user = await API.logIn(credentials);
@@ -36,7 +36,7 @@ function App() {
     }
   };
 
-  // NEW
+  // Logout
   const handleLogout = async () => {
     await API.logOut();
     setLoggedIn(false);
@@ -44,9 +44,14 @@ function App() {
     setMessage('');
   };
 
+  const startDemoGame = () => {
+    navigate('/demogame');
+  };
+
   const startGame = () => {
     navigate('/game');
   };
+
 
   return (
     <Routes>
@@ -70,13 +75,16 @@ function App() {
             <Row className='justify-content-center mt-5'>
               <Col className='text-center'>
                 <h1  className="h3">Welcome to the MemeGame! developed by <a href="https://github.com/aliabbasi2000" target="_blank" rel="noopener noreferrer">Ali Abbasi</a></h1>
-                <p>Click the button below to start demo playing</p>
-                <Button variant="primary" onClick={startGame} className='mt-3'>Start Game</Button>
+                {!loggedIn && <p>Click the button below to start demo playing</p>}
+                {loggedIn && <p>Click the button below to start the Game!</p>}
+                {!loggedIn && <Button variant="primary" onClick={startDemoGame} className='mt-3'>Start demo Game</Button>}
+                {loggedIn && <Button variant="primary" onClick={startGame} className='mt-3'>Let the Memes Begin!</Button>}
               </Col>
             </Row>
           </Container>
         } />
-        <Route path="/game" element={<MemeGame />} />
+        <Route path="/demogame" element={<MemeGame />} />
+        <Route path="/game" element={<Game />} />
         <Route path="*" element={ <NotFound/> } />
         <Route path='/login' element={
           loggedIn ? <Navigate replace to='/' /> : <LoginForm login={handleLogin} />

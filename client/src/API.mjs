@@ -1,5 +1,6 @@
 //import {Question, Answer} from './QAModels.mjs';
 
+
 const SERVER_URL = 'http://localhost:3001';
 
 // logIn
@@ -78,5 +79,33 @@ const getCaptionsByMemeId = async (memeId) => {
   }
 };
 
-const API = { logIn, logOut, getUserInfo, getRandomMeme, getCaptionsByMemeId };
+
+
+//  Start a new game for the authenticated user.
+const startNewGame = async () => {
+  try {
+    const response = await fetch('/api/game/start', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include', // Include cookies in the request
+    });
+
+    if (response.ok) {
+      return await response.json();
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message);
+    }
+  } catch (err) {
+    console.error('Error starting a new game:', err);
+    throw err;
+  }
+};
+
+
+const API = { logIn, logOut, getUserInfo, getRandomMeme, getCaptionsByMemeId, startNewGame };
 export default API;
+
+

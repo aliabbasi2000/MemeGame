@@ -138,7 +138,7 @@ app.get('/api/meme', async (req, res) => {
 });
 
 
-// getCaptionsByMemeId
+//  GET /api/meme/captions: Retrieves seven possible captions for a given meme picture.
 app.get('/api/meme/:memeId/captions', async (req, res) => {
   const memeId = req.params.memeId;
   try {
@@ -146,9 +146,53 @@ app.get('/api/meme/:memeId/captions', async (req, res) => {
     res.status(200).json({ captions });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Failed to retrieve Captions' });
   }
 });
+
+
+
+// POST /api/game/start:  Starts a new game for the authenticated user.
+// *Protected API
+app.post('/api/game/start', isLoggedIn, async (req, res) => {
+  try {
+    // Create a new game for the authenticated user
+    const gameId = await createGame(req.user.id);
+
+    // Fetch a random meme
+    const meme = await getRandomMeme();
+    if (!meme) {
+      return res.status(500).json({ message: 'Failed to retrieve a meme' });
+    }
+
+    // Fetch captions for the meme
+    const captions = await getCaptionsByMemeId(meme.id);
+    if (!captions) {
+      return res.status(500).json({ message: 'Failed to retrieve captions' });
+    }
+
+    // Prepare the response
+    const response = {
+      gameId: gameId,
+      meme: {
+        id: meme.id,
+        url: meme.url,
+      },
+      captions: captions.map(caption => ({
+        id: caption.id,
+        text: caption.caption,
+      })),
+    };
+
+    // Send the response
+    res.status(200).json(response);
+  } catch (error) {
+    console.error('Error starting a new game:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
 
 
 // start the server
