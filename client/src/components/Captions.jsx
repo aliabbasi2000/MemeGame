@@ -38,8 +38,8 @@ function Captions(props) {
     return <div>{error}</div>;
   }
 
-  
-  console.log(captions);
+  // list of 7 caption objects (id, caption)
+  //console.log(captions);
 
   return  (
 

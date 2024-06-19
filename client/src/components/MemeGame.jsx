@@ -18,6 +18,9 @@ function MemeGame() {
     fetchMeme();
   }, []);
 
+  // meme object (id, url)
+  //console.log(meme)
+
   if (!meme) return <div>Loading...</div>;
 
   return (
@@ -37,7 +40,7 @@ function MemeGame() {
           
         <Card.Body className="text-center">
           <Card.Title>Choose 2 of the best match Captions for the Meme:</Card.Title>
-          <Captions memeId={1}></Captions>
+          <Captions memeId={meme.id}></Captions>
         </Card.Body>
       </Card>
       </Col>
