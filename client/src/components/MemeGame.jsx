@@ -3,6 +3,7 @@ import { Container, Button, Row, Col, Card } from 'react-bootstrap';
 import API from '../API.mjs';
 import Captions from './Captions.jsx';
 
+
 function MemeGame() {
   const [meme, setMeme] = useState(null);
 
@@ -21,7 +22,10 @@ function MemeGame() {
   // meme object (id, url)
   //console.log(meme)
 
+
   if (!meme) return <div>Loading...</div>;
+
+
 
   return (
     
