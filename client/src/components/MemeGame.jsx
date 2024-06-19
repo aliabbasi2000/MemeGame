@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { getRandomMeme } from '../API.mjs';
+import React, { useState, useEffect } from 'react';;
 import { Container } from 'react-bootstrap'; 
+import API from '../API.mjs';
+import Captions from './Captions.jsx';
 
 function MemeGame() {
   const [meme, setMeme] = useState(null);
@@ -8,7 +9,7 @@ function MemeGame() {
   useEffect(() => {
     async function fetchMeme() {
       try {
-        const memeData = await getRandomMeme();
+        const memeData = await API.getRandomMeme();
         setMeme(memeData);
       } catch (error) {
         console.error('Error fetching meme:', error);
@@ -20,9 +21,16 @@ function MemeGame() {
   if (!meme) return <div>Loading...</div>;
 
   return (
-    <Container className="d-flex justify-content-center align-items-center vh-100">
+
+     <Container className="d-flex flex-column justify-content-center align-items-center vh-100">
       <img src={meme.url} alt="Random Meme" />
-    </Container >
+      <div>
+        <h3>Choose the best Captions</h3>
+        <ul>
+        <Captions memeId={2}></Captions>
+        </ul>
+      </div>
+    </Container>
   );
 }
 
