@@ -4,7 +4,8 @@ import morgan from 'morgan';
 import cors from 'cors';
 import {check, validationResult} from 'express-validator';
 import {getUser} from './dao/user-dao.mjs';
-import { getRandomMeme } from './dao/meme-dao.mjs';
+import { getRandomMeme,getCaptionsByMemeId } from './dao/meme-dao.mjs';
+
 
 // Passport-related imports
 import passport from 'passport';
@@ -136,6 +137,18 @@ app.get('/api/meme', async (req, res) => {
   }
 });
 
+
+
+app.get('/api/meme/:memeId/captions', async (req, res) => {
+  const memeId = req.params.memeId;
+  try {
+    const captions = await getCaptionsByMemeId(memeId);
+    res.status(200).json({ captions });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 
 // start the server

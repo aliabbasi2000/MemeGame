@@ -48,7 +48,7 @@ const logOut = async() => {
 
 
 // Get a random meme
-export const getRandomMeme = async () => {
+const getRandomMeme = async () => {
   try {
     const response = await fetch(SERVER_URL + '/api/meme');
     if (!response.ok) {
@@ -63,6 +63,7 @@ export const getRandomMeme = async () => {
 };
 
 
+// get captions by memeId
 const getCaptionsByMemeId = async (memeId) => {
   try {
     const response = await fetch(`${SERVER_URL}/api/meme/${memeId}/captions`);
@@ -77,5 +78,5 @@ const getCaptionsByMemeId = async (memeId) => {
   }
 };
 
-const API = { logIn, logOut, getUserInfo, getRandomMeme, getCaptionsByMemeId};
+const API = { logIn, logOut, getUserInfo, getRandomMeme, getCaptionsByMemeId };
 export default API;
