@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import API from '../API.mjs';
-import { Container, Button, Row, Col } from 'react-bootstrap';
+import { Container, Button, Row, Col, Card } from 'react-bootstrap';
 
 
 function Captions(props) {
@@ -42,6 +42,21 @@ function Captions(props) {
   console.log(captions);
 
   return  (
+
+    <div className="d-flex flex-column">
+            {captions.map(caption => (
+              <Button key={caption.id} variant="outline-primary" className="my-2">
+                {caption.caption}
+              </Button>
+            ))}
+          </div>
+
+  );
+};
+
+
+/*
+
     <Container className="text-center">
       <h3>Captions for Meme {props.memeId}</h3>
       {captions.map(caption => (
@@ -58,8 +73,8 @@ function Captions(props) {
         </Row>
       ))}
     </Container>
-  );
-};
+
+*/
 
 
 export default Captions;
