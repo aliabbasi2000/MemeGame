@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import API from '../API.mjs';
+import { Container, Button, Row, Col } from 'react-bootstrap';
 
 
 function Captions(props) {
@@ -24,6 +25,10 @@ function Captions(props) {
 
     fetchCaptions();
   }, [props.memeId]);
+  
+  const handleCaptionClick = (caption) => {
+    alert(`You selected: ${caption.caption}`);
+  };
 
   if (loading) {
     return <div>Loading captions...</div>;
@@ -36,15 +41,23 @@ function Captions(props) {
   
   console.log(captions);
 
-  return (
-    <div>
+  return  (
+    <Container className="text-center">
       <h3>Captions for Meme {props.memeId}</h3>
-      <ul>
-        {captions.map(captions => (
-          <li key={captions.id}>{captions.caption}</li>
-        ))}
-      </ul>
-    </div>
+      {captions.map(caption => (
+        <Row key={caption.id} className="justify-content-center my-2">
+          <Col xs="auto">
+            <Button
+              onClick={() => handleCaptionClick(caption)}
+              style={{ width: '1000px', height: '40px', backgroundColor: 'white', color: 'black', border: '1px solid black' }}
+              
+            >
+              {caption.caption}
+            </Button>
+          </Col>
+        </Row>
+      ))}
+    </Container>
   );
 };
 

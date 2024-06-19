@@ -25,7 +25,6 @@ function MemeGame() {
      <Container className="d-flex flex-column justify-content-center align-items-center vh-100">
       <img src={meme.url} alt="Random Meme" />
       <div>
-        <h3>Choose the best Captions</h3>
         <ul>
         <Captions memeId={2}></Captions>
         </ul>

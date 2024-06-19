@@ -138,7 +138,7 @@ app.get('/api/meme', async (req, res) => {
 });
 
 
-
+// getCaptionsByMemeId
 app.get('/api/meme/:memeId/captions', async (req, res) => {
   const memeId = req.params.memeId;
   try {
