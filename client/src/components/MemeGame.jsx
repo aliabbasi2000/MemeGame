@@ -39,7 +39,7 @@ function MemeGame() {
           />
           
         <Card.Body className="text-center">
-          <Card.Title>Choose 2 of the best match Captions for the Meme:</Card.Title>
+          <Card.Title>"Memeify" the captions below to verify your Meme taste!</Card.Title>
           <Captions memeId={meme.id}></Captions>
         </Card.Body>
       </Card>
