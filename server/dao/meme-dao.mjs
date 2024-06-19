@@ -19,68 +19,79 @@ const getRandomMeme = () => {
 
 
 /*
+
 // TEST
 const getCaptionsByMemeId = (memeId) => {
   return new Promise((resolve, reject) => {
-    const bestMatchQuery = `
+    const sql = `
       SELECT captions.id, captions.caption
       FROM captions
-      WHERE captions.id = ?
+      WHERE captions.id = 1
       `;
-      this.db.all(bestMatchQuery, [memeId], (err, bestMatchRows) => {
+      db.get(sql, [], (err, row) => {
         if (err) {
           reject(err);
-          return;
+        } else if (row === undefined) {
+          resolve(null);
+        } else {
+          resolve(row);
         }
-  
-  
-
-          resolve(bestMatchRows);
         });
       });
     };
 
-
-
 */
 
-// SELECT c.id, c.caption
-// FROM captions c
-// JOIN meme_caption ON c.id = meme_caption.caption_id
-// WHERE meme_caption.meme_id = ?
-// ORDER BY RANDOM()
-// LIMIT 2;
 
 
-const getCaptionsByMemeId = async (memeId) => {
-  try {
+
+const getCaptionsByMemeId = (memeId) => {
+  return new Promise((resolve, reject) => {
     const bestCaptionsQuery = `
       SELECT c.id, c.caption
-        FROM captions c
-        JOIN meme_caption ON c.id = meme_caption.caption_id
-        WHERE meme_caption.meme_id = ?
-        ORDER BY RANDOM()
-        LIMIT 2;
-    `;
-
-    const bestCaptions = await db.all(bestCaptionsQuery, [memeId]);
-
-    const otherCaptionsQuery = `
-      SELECT c.id, c.caption
       FROM captions c
-      WHERE c.id NOT IN (SELECT caption_id FROM meme_caption WHERE meme_id = ?)
+      JOIN meme_caption ON c.id = meme_caption.caption_id
+      WHERE meme_caption.meme_id = ?
       ORDER BY RANDOM()
-      LIMIT 5;
+      LIMIT 2;
     `;
 
-    const otherCaptions = await db.all(otherCaptionsQuery, [memeId]);
-    return [...bestCaptions, ...otherCaptions];
+    db.all(bestCaptionsQuery, [memeId], (err, bestCaptions) => {
+      if (err) {
+        console.error('Error executing bestCaptionsQuery:', err);
+        reject(err);
+        return;
+      }
 
-    } catch (error) {
-    console.error('Error while getting captions from database! :(  :', error);
-    throw error;
-  }
+      const otherCaptionsQuery = `
+        SELECT c.id, c.caption
+        FROM captions c
+        WHERE c.id NOT IN (SELECT caption_id FROM meme_caption WHERE meme_id = ?)
+        ORDER BY RANDOM()
+        LIMIT 5;
+      `;
+
+      db.all(otherCaptionsQuery, [memeId], (err, otherCaptions) => {
+        if (err) {
+          console.error('Error executing otherCaptionsQuery:', err);
+          reject(err);
+        } else {
+
+          const result = [...bestCaptions, ...otherCaptions]
+
+          // for suffling the list of captions
+          for (let i = result.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [result[i], result[j]] = [result[j], result[i]];
+          }
+
+          resolve(result);
+        }
+      });
+    });
+  });
 };
+
 
 
 export { getRandomMeme, getCaptionsByMemeId };
