@@ -79,11 +79,14 @@ const getCaptionsByMemeId = (memeId) => {
 
           const result = [...bestCaptions, ...otherCaptions]
 
+          // !!! Dont need to validate the answers on server side. we send unsuffelled list to client so client can recognize the correct captions
+          /*
           // for suffling the list of captions
           for (let i = result.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [result[i], result[j]] = [result[j], result[i]];
           }
+          */
 
           resolve(result);
         }
