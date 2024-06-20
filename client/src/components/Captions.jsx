@@ -77,7 +77,7 @@ function Captions(props) {
 
   // list of 7 caption objects (id, caption)
   // first 2 caption objects are the correct caption, the rest 5 are the wrong
-  //console.log(captions);
+  console.log(captions);
 
 
 

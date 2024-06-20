@@ -8,6 +8,7 @@ import { LoginForm } from './components/AuthComponents';
 import API from './API.mjs';
 import MemeGame from './components/MemeGame';
 import Game from "./components/Game";
+import Profile from './components/Profile';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -89,6 +90,8 @@ function App() {
         <Route path='/login' element={
           loggedIn ? <Navigate replace to='/' /> : <LoginForm login={handleLogin} />
         } />
+        <Route path='/profile' element = {<Profile />}/>
+            
       </Route>
     </Routes>
 

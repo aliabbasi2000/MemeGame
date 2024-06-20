@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';;
+import React, { useState, useEffect, useRef } from 'react';;
 import { Container, Button, Row, Col, Card } from 'react-bootstrap'; 
 import API from '../API.mjs';
 import Captions from './Captions.jsx';
@@ -7,7 +7,13 @@ import Captions from './Captions.jsx';
 function MemeGame() {
   const [meme, setMeme] = useState(null);
 
+  // useRef to Ensure the fetch is only called once, if the ref indicates it hasn't been called before.
+  // without it fetching happens 2 times at the beggining and makes problems sometimes.
+  const fetchInitiated = useRef(false); 
+
   useEffect(() => {
+    if (fetchInitiated.current) return; // Return if fetch has already been initiated
+    
     async function fetchMeme() {
       try {
         const memeData = await API.getRandomMeme();
@@ -17,10 +23,11 @@ function MemeGame() {
       }
     }
     fetchMeme();
+    fetchInitiated.current = true; // Set fetch initiation flag to true
   }, []);
 
   // meme object (id, url)
-  //console.log(meme)
+  console.log(meme)
 
 
   if (!meme) return <div>Loading...</div>;
