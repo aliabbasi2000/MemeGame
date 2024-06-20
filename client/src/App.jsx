@@ -11,8 +11,8 @@ import Game from "./components/Game";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [message, setMessage] = useState(''); // NEW
-  const [user, setUser] = useState(''); // NEW
+  const [message, setMessage] = useState(''); 
+  const [user, setUser] = useState(''); 
   const navigate = useNavigate();
 
   useEffect(() => {
