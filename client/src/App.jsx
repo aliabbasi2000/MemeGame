@@ -54,6 +54,7 @@ function App() {
     navigate('/game');
   };
 
+  console.log(user)
 
   return (
 
@@ -100,7 +101,7 @@ function App() {
       } />
 
       {/* If loggedIn is true, render the Profile component; otherwise, redirect to home page. */}
-      <Route path='/profile' element={loggedIn ? <Profile /> : <Navigate to='/' />} />
+      <Route path='/profile' element={loggedIn ? <Profile user={user}/> : <Navigate to='/' />} />
 
       
     </Routes>
