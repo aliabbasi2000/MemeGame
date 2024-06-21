@@ -47,6 +47,17 @@
       - 200: OK - Captions retrieved successfully.
       - 500: Internal Server Error - Server error while retrieving captions.
 
+
+- GET /api/users/profile: Retrieves the profile information and game history of the authenticated user.
+  - Path Parameters: userId (user ID)
+  - Response: { user: { id: integer, username: string, totalScore: integer }, games: [{ id: integer, date: string, score: integer, rounds: [{ meme: { id: integer, url: string }, score: integer, correctCaption: string, guessedCaption: string }] }] }
+  - response status code:
+      - 200: OK - Profile and game history retrieved successfully.
+      - 404: Not Found - User not found.
+      - 500: Internal Server Error - Server error while retrieving profile.
+
+
+
 - POST /api/game/start:  Starts a new game for the authenticated user.
   - Request Body: None
   - Response: { gameId: integer, meme: { id: integer, url: string }, captions: [{ id: integer, text: string }] }
@@ -76,13 +87,7 @@
       - 500: Internal Server Error - Server error while starting a new round.
 
       
-- GET /api/users/profile: Retrieves the profile information and game history of the authenticated user.
-  - Path Parameters: userId (user ID)
-  - Response: { user: { id: integer, username: string, totalScore: integer }, games: [{ id: integer, date: string, score: integer, rounds: [{ meme: { id: integer, url: string }, score: integer, correctCaption: string, guessedCaption: string }] }] }
-  - response status code:
-      - 200: OK - Profile and game history retrieved successfully.
-      - 404: Not Found - User not found.
-      - 500: Internal Server Error - Server error while retrieving profile.
+
 
 
 
