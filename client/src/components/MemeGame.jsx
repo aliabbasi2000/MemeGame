@@ -54,7 +54,10 @@ function MemeGame() {
           <Captions memeId={meme.id}></Captions>
         </Card.Body>
       </Card>
+      
+
       </Col>
+
       </Row>
     )}
   </Container>
