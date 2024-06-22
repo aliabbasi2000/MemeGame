@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import API from '../API.mjs';
-import { Container, Button, Alert, Card } from 'react-bootstrap';
+import { Container, Button, Alert, Card, Row, Col } from 'react-bootstrap';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
@@ -128,9 +128,8 @@ function Game() {
   }
 
   return (
-    <Container className="text-center">
-      <h3>Round {round + 1} of {TOTAL_ROUNDS}</h3>
-      <div className="d-flex justify-content-center my-4">
+    <Container className="mt-5">
+      <Row className="justify-content-center mb-4">
         <div style={{ width: 100, height: 100 }}>
           <CircularProgressbar
             value={percentage}
@@ -142,37 +141,55 @@ function Game() {
             })}
           />
         </div>
-      </div>
-      <div>
-        <img src={memeUrl} alt="Meme" style={{ maxWidth: '100%' }} />
-      </div>
-      {alertMessage && (
-        <Alert variant={alertVariant} onClose={() => setAlertMessage('')} dismissible>
-          {alertMessage}
-        </Alert>
-      )}
-      {captions.map((caption) => (
-        <Button
-          key={caption.id}
-          variant="outline-primary"
-          className="my-2"
-          onClick={() => handleCaptionClick(caption)}
-          disabled={hasSelected}
-          style={{
-            backgroundColor:
-              selectedCaptionId === caption.id
-                ? captionCorrectness[caption.id]
-                  ? 'green'
-                  : 'red'
-                : '',
-          }}
-        >
-          {caption.caption}
-        </Button>
-      ))}
-      <Card>
-        {hasSelected && <Button onClick={nextRound}>Next Round</Button>}
-      </Card>
+      </Row>
+      <Row className="justify-content-center">
+        <Col md={6}>
+          <Card>
+            <Card.Img
+              variant="top"
+              src={memeUrl}
+              alt="Meme"
+              className="img-fluid mx-auto d-block"
+              style={{ maxWidth: '80%', maxHeight: '80%' }}
+            />
+            <Card.Body className="text-center">
+              <Card.Title>"Memeify" the captions below to verify your Meme taste!</Card.Title>
+              {alertMessage && (
+                <Alert variant={alertVariant} onClose={() => setAlertMessage('')} dismissible>
+                  {alertMessage}
+                </Alert>
+              )}
+              {captions.map((caption) => (
+                <Row key={caption.id} className="my-2">
+                  <Col>
+                    <Button
+                      variant="outline-primary"
+                      onClick={() => handleCaptionClick(caption)}
+                      disabled={hasSelected}
+                      style={{
+                        width: '100%',
+                        backgroundColor:
+                          selectedCaptionId === caption.id
+                            ? captionCorrectness[caption.id]
+                              ? 'green'
+                              : 'red'
+                            : '',
+                      }}
+                    >
+                      {caption.caption}
+                    </Button>
+                  </Col>
+                </Row>
+              ))}
+              {hasSelected && (
+                <Row className="justify-content-center my-4">
+                  <Button onClick={nextRound}>Next Round</Button>
+                </Row>
+              )}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
     </Container>
   );
 }
