@@ -62,6 +62,7 @@
 
 
 
+
 - POST /api/game/start:  Starts a new game for the authenticated user.
   - Request Body: None
   - Response: { gameId: integer, meme: { id: integer, url: string }, captions: [{ id: integer, text: string }] }

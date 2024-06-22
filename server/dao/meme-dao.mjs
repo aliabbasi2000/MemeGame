@@ -18,32 +18,6 @@ const getRandomMeme = () => {
 };
 
 
-/*
-
-// TEST
-const getCaptionsByMemeId = (memeId) => {
-  return new Promise((resolve, reject) => {
-    const sql = `
-      SELECT captions.id, captions.caption
-      FROM captions
-      WHERE captions.id = 1
-      `;
-      db.get(sql, [], (err, row) => {
-        if (err) {
-          reject(err);
-        } else if (row === undefined) {
-          resolve(null);
-        } else {
-          resolve(row);
-        }
-        });
-      });
-    };
-
-*/
-
-
-
 
 const getCaptionsByMemeId = (memeId) => {
   return new Promise((resolve, reject) => {
