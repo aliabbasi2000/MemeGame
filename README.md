@@ -1,10 +1,14 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/AVMm0VzU)
-# Exam #N: "Exam Title: What do you meme?" board game."
+# Exam #1: "Exam Title: What do you meme?" board game."
 ## Student: s323638 ABBASI ALI 
 
 ## React Client Application Routes
 
-- Route `/`: page content and purpose
+- Route `/`: Home page - consist of a start button to start the game & Login Button
+- Route `/Login`: Login page - consist of a login form to perform Authentication
+- Route `/demogame`: Demo Game Page - The gane page for the annonimous user
+- Route `/game`: Game Page - The gane page for the Authenticated user
+- Route `/profile`: user profile Page - consist of the Games that user played before and the meme and the score of them for each round
 - Route `/something/:param`: page content and purpose, param specification
 - ...
 
@@ -101,6 +105,10 @@
   - id, caption
 - Table `meme_caption` - a middle table thatShows the N to N relationship between captions and memes
   - meme_id, caption_id
+- Table `games` - has the games for the users
+  - id, user_id
+- Table `rounds` - has the information of rounds
+  - id, game_id, meme_id, selected_caption_id, score
 
 
 ## Screenshots
