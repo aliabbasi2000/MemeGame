@@ -83,51 +83,5 @@ function Profile(props) {
         </Container>
     );
 }
-    /*
-
-
-    */
-
-
-    /*
-    return (
-        <Container className="my-5">
-      <Row className="justify-content-center mb-4">
-        <Col md={8} className="text-center">
-          <h1 className="display-4">Profile Page</h1>
-          <h4 className="text-muted">Username: {props.user.username}</h4>
-        </Col>
-      </Row>
-          {profileData.games.map((game) => (
-            <Card key={game.game_id} className="mb-4">
-              <Card.Body>
-                <Card.Title>Game ID: {game.game_id}</Card.Title>
-                {game.rounds.map((round) => (
-                  <Card key={round.round_id} className="mb-3">
-                    <Row noGutters>
-                      <Col md={4}>
-                        <div style={{ width: '80%',  height: '100%', overflow: 'hidden' }}>
-                          <Card.Img 
-                            src={round.meme_url} 
-                            alt="Meme" 
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                          />
-                        </div>
-                      </Col>
-                      <Col md={8}>
-                        <Card.Body>
-                          <Card.Text>Selected Caption ID: {round.selected_caption_id}</Card.Text>
-                          <Card.Text>Score: {round.score}</Card.Text>
-                        </Card.Body>
-                      </Col>
-                    </Row>
-                  </Card>
-                ))}
-              </Card.Body>
-            </Card>
-          ))}
-        </Container>
-      );
-    */
-
+    
 export default Profile;
