@@ -67,6 +67,11 @@ function Captions(props) {
   };
 
 
+  const restartGame = () => {
+    window.location.reload(); // Reload the page
+  };
+
+
   if (loading) {
     return <div>Loading captions...</div>;
   }
@@ -106,9 +111,17 @@ function Captions(props) {
         >
           {caption.caption}
         </Button>
+        
       ))}
+
+      <Card>
+      {hasSelected && <Button onClick={() => restartGame()}> Restart </Button>}
+      </Card>
+
     </div>
+
   );
+
 
 
 
