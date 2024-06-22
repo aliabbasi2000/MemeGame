@@ -5,7 +5,7 @@ import cors from 'cors';
 import {check, validationResult} from 'express-validator';
 import {getUser} from './dao/user-dao.mjs';
 import { getRandomMeme,getCaptionsByMemeId } from './dao/meme-dao.mjs';
-
+import {getGamesByUserId} from './dao/game-dao.mjs';
 
 // Passport-related imports
 import passport from 'passport';
@@ -192,6 +192,24 @@ app.post('/api/game/start', isLoggedIn, async (req, res) => {
   }
 });
 
+
+
+// GET /api/users/profile: Get games and rounds for a user ID
+/////
+app.get('/api/users/profile', isLoggedIn, async (req, res) => {
+  const { user_id } = req.query;
+  // console.log(`Received request for user_id: ${user_id}`); // Debug log
+  try {
+    const gamesinfo = await getGamesByUserId(user_id);
+    // console.log('Fetched gamesinfo:', gamesinfo); // Debug log
+    res.json({
+      games: gamesinfo
+    });
+  } catch (err) {
+    console.error('Error fetching user profile:', err);
+    res.status(500).json({ error: 'Failed to fetch user profile' });
+  }
+});
 
 
 

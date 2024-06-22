@@ -46,7 +46,7 @@ function MemeGame() {
             src={meme.url}
             alt="Meme"
             className="img-fluid mx-auto d-block"
-            style={{ maxWidth: '100%', height: 'auto', maxHeight: '450px' }}
+            style={{ maxWidth: '80%', maxHeight: '80%' }}
           />
           
         <Card.Body className="text-center">
