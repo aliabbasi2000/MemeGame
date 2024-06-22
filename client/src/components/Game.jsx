@@ -3,6 +3,7 @@ import API from '../API.mjs';
 import { Container, Button, Alert, Card } from 'react-bootstrap';
 
 const TOTAL_ROUNDS = 3;
+const ROUND_TIME = 30; // 30 seconds for each round
 
 function Game() {
   const [round, setRound] = useState(0);
@@ -16,6 +17,7 @@ function Game() {
   const [alertVariant, setAlertVariant] = useState('');
   const [hasSelected, setHasSelected] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+  const [timer, setTimer] = useState(ROUND_TIME);
 
   const shuffleArray = (array) => {
     const shuffled = array.slice();
@@ -50,10 +52,22 @@ function Game() {
   useEffect(() => {
     if (round < TOTAL_ROUNDS) {
       fetchMemeAndCaptions();
+      setTimer(ROUND_TIME); // Reset timer for new round
     } else {
       setGameOver(true);
     }
   }, [round]);
+
+  useEffect(() => {
+    if (timer > 0 && !hasSelected) {
+      const timerId = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+      return () => clearInterval(timerId);
+    } else if (timer === 0) {
+      nextRound();
+    }
+  }, [timer, hasSelected]);
 
   const handleCaptionClick = (caption) => {
     const isCorrect = caption.correct;
@@ -85,6 +99,11 @@ function Game() {
   const startGame = () => {
     setRound(0);
     setGameOver(false);
+    setHasSelected(false);
+    setSelectedCaptionId(null);
+    setCaptionCorrectness({});
+    setAlertMessage('');
+    setAlertVariant('');
   };
 
   if (loading) {
@@ -107,6 +126,7 @@ function Game() {
   return (
     <Container className="text-center">
       <h3>Round {round + 1} of {TOTAL_ROUNDS}</h3>
+      <div>Time Remaining: {timer} seconds</div>
       <div>
         <img src={memeUrl} alt="Meme" style={{ maxWidth: '100%' }} />
       </div>
