@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import API from '../API.mjs';
 import { Container, Button, Alert, Card } from 'react-bootstrap';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 const TOTAL_ROUNDS = 3;
 const ROUND_TIME = 30; // 30 seconds for each round
@@ -106,6 +108,8 @@ function Game() {
     setAlertVariant('');
   };
 
+  const percentage = (timer / ROUND_TIME) * 100;
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -126,7 +130,19 @@ function Game() {
   return (
     <Container className="text-center">
       <h3>Round {round + 1} of {TOTAL_ROUNDS}</h3>
-      <div>Time Remaining: {timer} seconds</div>
+      <div className="d-flex justify-content-center my-4">
+        <div style={{ width: 100, height: 100 }}>
+          <CircularProgressbar
+            value={percentage}
+            text={`${timer}s`}
+            styles={buildStyles({
+              textColor: '#000',
+              pathColor: '#f00',
+              trailColor: '#ddd',
+            })}
+          />
+        </div>
+      </div>
       <div>
         <img src={memeUrl} alt="Meme" style={{ maxWidth: '100%' }} />
       </div>
