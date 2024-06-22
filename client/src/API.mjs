@@ -105,7 +105,27 @@ const startNewGame = async () => {
 };
 
 
-const API = { logIn, logOut, getUserInfo, getRandomMeme, getCaptionsByMemeId, startNewGame };
+
+const getUserProfile = async (userId) => {
+  const response = await fetch(`${SERVER_URL}/api/users/profile?user_id=${userId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  });
+  if(response.ok) {
+    const profileData = await response.json();
+    return profileData;
+  }
+  else {
+    const errDetails = await response.text();
+    throw errDetails;
+  }
+};
+
+
+const API = { logIn, logOut, getUserInfo, getRandomMeme, getCaptionsByMemeId, startNewGame, getUserProfile };
 export default API;
 
 

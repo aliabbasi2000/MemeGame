@@ -14,6 +14,8 @@ const createGame = async (userId) => {
   });
 };
 
+
+// ????????????????????????????????????????????????????????????????.....
 // Get a game by ID
 const getGameById = async (gameId) => {
   return new Promise((resolve, reject) => {
@@ -32,18 +34,23 @@ const getGameById = async (gameId) => {
 
 // Get games and rounds for a user ID
 const getGamesByUserId = async (userId) => {
+
   const sql = `
-    SELECT games.id AS game_id, rounds.id AS round_id, rounds.selected_caption_id, rounds.score, memes.url
-    FROM games
-    INNER JOIN rounds ON games.id = rounds.game_id
-    INNER JOIN memes ON rounds.meme_id = memes.id
-    WHERE games.user_id = ?
-  `;
+  SELECT games.id AS game_id, rounds.id AS round_id, rounds.selected_caption_id, rounds.score, memes.url
+  FROM games
+  INNER JOIN rounds ON games.id = rounds.game_id
+  INNER JOIN memes ON rounds.meme_id = memes.id
+  WHERE games.user_id = ?
+`;
   return new Promise((resolve, reject) => {
+    //console.log('Executing SQL query with userId:', userId); // Debug log
+    
     db.all(sql, [userId], (err, rows) => {
       if (err) {
+        //console.error('SQL query error:', err); // Error log
         reject(err);
       } else {
+        console.log('SQL query returned rows:', rows); // Debug log
         // Organize data into a structured format
         const games = {};
         rows.forEach(row => {
@@ -60,11 +67,14 @@ const getGamesByUserId = async (userId) => {
             meme_url: row.url
           });
         });
-        resolve(Object.values(games)); // Convert object to array of games
+        const result = Object.values(games); // Convert object to array of games
+        //console.log('Structured games data:', result); // Log the result
+        resolve(result);
       }
     });
   });
 };
+
 
 
 export { createGame, getGameById, getGamesByUserId };
