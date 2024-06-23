@@ -13,7 +13,7 @@
 - ...
 
 
-## Main React Components
+## Main React Components 
 
 - `ListOfSomething` (in `List.js`): component purpose and main functionality
 - `GreatButton` (in `GreatButton.js`): component purpose and main functionality
