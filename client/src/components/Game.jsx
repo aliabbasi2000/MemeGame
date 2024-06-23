@@ -3,9 +3,10 @@ import API from '../API.mjs';
 import { Container, Button, Alert, Card, Row, Col } from 'react-bootstrap';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import GameOver from './GameOver';
 
 const TOTAL_ROUNDS = 3;
-const ROUND_TIME = 30;
+const ROUND_TIME = 4;
 
 function Game(props) {
   const [round, setRound] = useState(0);
@@ -81,7 +82,7 @@ function Game(props) {
   //insuring that runs in strick mode
   //useEffect(() => {console.log("TEST STRICKT MODE")}, []);
 
-  
+
   const handleCaptionClick = (caption) => {
     const isCorrect = caption.correct;
     setSelectedCaptionId(caption.id);
@@ -159,23 +160,18 @@ function Game(props) {
   }
 
   if (gameOver) {
-    return (
-      <Container className="text-center">
-        <h3>Game Over! Thanks for playing!</h3>
-        <Alert variant={alertVariant}>
-          {alertMessage}
-        </Alert>
-        <h4>Your Total Score: {totalScore}</h4>
-        <Button className="ml-2" onClick={startGame}>Play Again</Button>
+    return(
+      <Container>
+      <GameOver totalScore={totalScore} alertVariant={alertVariant} alertMessage={alertMessage}></GameOver>
       </Container>
-    );
+    )
   }
 
   //console.log(gameData)
   
   return (
     <Container className="mt-5">
-      <Col>
+      {!isSubmitting && <Col>
         <h2 className="text-muted">Round {round+1} of 3 </h2>
         <div style={{ width: 230, height: 0 }}>
           <CircularProgressbar
@@ -188,7 +184,7 @@ function Game(props) {
             })}
           />
         </div>
-      </Col>
+      </Col>}
       <Row className="justify-content-center">
         <Col md={6}>
           <Card>
@@ -247,6 +243,9 @@ function Game(props) {
             )}
             </Card.Body>
           </Card>
+          <>
+          {isSubmitting && <GameOver totalScore={totalScore} alertVariant={alertVariant} alertMessage={alertMessage} />}
+          </>
         </Col>
       </Row>
     </Container>
