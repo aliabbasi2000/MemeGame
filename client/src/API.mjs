@@ -125,7 +125,28 @@ const getUserProfile = async (userId) => {
 };
 
 
-const API = { logIn, logOut, getUserInfo, getRandomMeme, getCaptionsByMemeId, startNewGame, getUserProfile };
+
+
+export const submitGameResults = async (gameData) => {
+  try {
+    const response = await fetch(`${SERVER_URL}/api/submitGameResults`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(gameData)
+    });
+    if (!response.ok) {
+      throw new Error('Failed to save game results');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+
+const API = { logIn, logOut, getUserInfo, getRandomMeme, getCaptionsByMemeId, startNewGame, getUserProfile, submitGameResults };
 export default API;
 
 

@@ -77,4 +77,57 @@ const getGamesByUserId = async (userId) => {
 
 
 
-export { createGame, getGameById, getGamesByUserId };
+// Save game results to the database
+const saveGameResults = async (gameData) => {
+  return new Promise((resolve, reject) => {
+    const insertRoundQuery = 'INSERT INTO rounds (game_id, meme_id, selected_caption_id, score) VALUES (?, ?, ?, ?)';
+
+    console.log('gameData in DAO:', gameData);
+    
+    if (!Array.isArray(gameData)) {
+      return reject(new Error('Invalid gameData structure'));
+    }
+
+    db.serialize(() => {
+      db.run('BEGIN TRANSACTION', (err) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        let rollback = false;
+
+        gameData.forEach((round) => {
+          db.run(insertRoundQuery, [round.gameId, round.meme_id, round.selected_caption_id, round.score], (err) => {
+            if (err) {
+              rollback = true;
+              db.run('ROLLBACK', (rollbackErr) => {
+                if (rollbackErr) {
+                  reject(rollbackErr);
+                } else {
+                  reject(err);
+                }
+              });
+              return;
+            }
+          });
+        });
+
+        if (!rollback) {
+          db.run('COMMIT', (commitErr) => {
+            if (commitErr) {
+              reject(commitErr);
+            } else {
+              resolve();
+            }
+          });
+        }
+      });
+    });
+  });
+};
+
+
+
+
+export { createGame, getGameById, getGamesByUserId, saveGameResults };

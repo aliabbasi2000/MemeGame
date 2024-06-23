@@ -5,11 +5,12 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 const TOTAL_ROUNDS = 3;
-const ROUND_TIME = 30; // 30 seconds for each round
+const ROUND_TIME = 30;
+const GAME_ID = 1; // Example gameId, replace with your logic to generate or fetch gameId
 
 function Game() {
   const [round, setRound] = useState(0);
-  const [memeUrl, setMemeUrl] = useState('');
+  const [meme, setMeme] = useState({});
   const [captions, setCaptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,6 +21,7 @@ function Game() {
   const [hasSelected, setHasSelected] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [timer, setTimer] = useState(ROUND_TIME);
+  const [gameData, setGameData] = useState([]);
 
   const shuffleArray = (array) => {
     const shuffled = array.slice();
@@ -39,9 +41,10 @@ function Game() {
       const enhancedCaptions = fetchedCaptions.map((caption, index) => ({
         ...caption,
         correct: index < 2,
+        memeId: meme.id, // Add memeId here
       }));
       const shuffledCaptions = shuffleArray(enhancedCaptions);
-      setMemeUrl(meme.url);
+      setMeme(meme);
       setCaptions(shuffledCaptions);
     } catch (err) {
       setError('Failed to fetch meme or captions');
@@ -87,6 +90,16 @@ function Game() {
       setAlertMessage('Wrong!!! Even don\'t try to login. Press that red button on your browser and Exit');
       setAlertVariant('danger');
     }
+
+    const roundData = {
+      gameId: GAME_ID,
+      round: round + 1,
+      meme_id: caption.memeId, // Ensure memeId is included here
+      selected_caption_id: caption.id,
+      score: isCorrect ? 5 : 0,
+    };
+
+    setGameData((prevGameData) => [...prevGameData, roundData]);
   };
 
   const nextRound = () => {
@@ -106,6 +119,17 @@ function Game() {
     setCaptionCorrectness({});
     setAlertMessage('');
     setAlertVariant('');
+    setGameData([]);
+  };
+
+  const submitGameData = async () => {
+    try {
+      await API.submitGameResults(gameData);
+      alert('Game results submitted successfully!');
+    } catch (err) {
+      console.error('Failed to submit game results:', err);
+      alert('Failed to submit game results.');
+    }
   };
 
   const percentage = (timer / ROUND_TIME) * 100;
@@ -122,7 +146,7 @@ function Game() {
     return (
       <Container className="text-center">
         <h3>Game Over! Thanks for playing!</h3>
-        <Button onClick={startGame}>Play Again</Button>
+        <Button className="ml-2" onClick={startGame}>Play Again</Button>
       </Container>
     );
   }
@@ -147,7 +171,7 @@ function Game() {
           <Card>
             <Card.Img
               variant="top"
-              src={memeUrl}
+              src={meme.url}
               alt="Meme"
               className="img-fluid mx-auto d-block"
               style={{ maxWidth: '80%', maxHeight: '80%' }}
@@ -173,7 +197,9 @@ function Game() {
                             ? captionCorrectness[caption.id]
                               ? 'green'
                               : 'red'
-                            : '',
+                            : hasSelected && caption.correct
+                              ? 'yellow'
+                              : '',
                       }}
                     >
                       {caption.caption}
@@ -183,7 +209,11 @@ function Game() {
               ))}
               {hasSelected && (
                 <Row className="justify-content-center my-4">
-                  <Button onClick={nextRound}>Next Round</Button>
+                  {round === TOTAL_ROUNDS - 1 ? (
+                    <Button onClick={submitGameData}>Submit</Button>
+                  ) : (
+                    <Button onClick={nextRound}>Next Round</Button>
+                  )}
                 </Row>
               )}
             </Card.Body>

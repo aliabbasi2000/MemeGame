@@ -5,7 +5,8 @@ import cors from 'cors';
 import {check, validationResult} from 'express-validator';
 import {getUser} from './dao/user-dao.mjs';
 import { getRandomMeme,getCaptionsByMemeId } from './dao/meme-dao.mjs';
-import {getGamesByUserId} from './dao/game-dao.mjs';
+import {getGamesByUserId, saveGameResults} from './dao/game-dao.mjs';
+import bodyParser from 'body-parser';
 
 // Passport-related imports
 import passport from 'passport';
@@ -20,6 +21,7 @@ const port = 3001;
 // register the middlewares
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(bodyParser.json());
 
 
 // enabling cors to accept security credentials from the origin http://localhost:5173(react app URL)
@@ -195,7 +197,6 @@ app.post('/api/game/start', isLoggedIn, async (req, res) => {
 
 
 // GET /api/users/profile: Get games and rounds for a user ID
-/////
 app.get('/api/users/profile', isLoggedIn, async (req, res) => {
   const { user_id } = req.query;
   // console.log(`Received request for user_id: ${user_id}`); // Debug log
@@ -212,6 +213,19 @@ app.get('/api/users/profile', isLoggedIn, async (req, res) => {
 });
 
 
+
+
+
+
+app.post('/api/submitGameResults', async (req, res) => {
+  const gameData = req.body;
+  try {
+    await saveGameResults(gameData);
+    res.status(200).send('Game results saved successfully');
+  } catch (err) {
+    res.status(500).send('Error saving game results: ' + err.message);
+  }
+});
 
 // start the server
 app.listen(port, () => { console.log(`API server started at http://localhost:${port}`); });
