@@ -50,7 +50,7 @@ function MemeGame() {
           />
           
         <Card.Body className="text-center">
-          <Card.Title>"Memeify" the captions below to verify your Meme taste!</Card.Title>
+          <Card.Title>Verify your Meme taste!</Card.Title>
           <Captions memeId={meme.id}></Captions>
         </Card.Body>
       </Card>

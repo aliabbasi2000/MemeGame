@@ -94,6 +94,7 @@ const saveGameResults = async (gameData) => {
 
         let rollback = false;
 
+        // becarful of empty gamedata that can be sent from the client in that case game[0] can cause an error
         db.run(insertGameSQL, [gameData[0].userId], function(err) {
           if (err) {
             db.run('ROLLBACK', (rollbackErr) => {
