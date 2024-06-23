@@ -80,6 +80,80 @@ const getGamesByUserId = async (userId) => {
 // Save game results to the database
 const saveGameResults = async (gameData) => {
   return new Promise((resolve, reject) => {
+    const insertGameSQL = 'INSERT INTO games (user_id) VALUES (?)';
+    const insertRoundSQL = 'INSERT INTO rounds (game_id, meme_id, selected_caption_id, score) VALUES (?, ?, ?, ?)';
+
+    console.log('gameData in DAO:', gameData);
+
+    db.serialize(() => {
+      db.run('BEGIN TRANSACTION', (err) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        let rollback = false;
+
+        db.run(insertGameSQL, [gameData[0].userId], function(err) {
+          if (err) {
+            db.run('ROLLBACK', (rollbackErr) => {
+              return rollbackErr ? reject(rollbackErr) : reject(err);
+            });
+            return;
+          }
+
+          const gameId = this.lastID;
+
+          gameData.forEach((round) => {
+            db.run(insertRoundSQL, [gameId, round.meme_id, round.selected_caption_id, round.score], (err) => {
+              if (err) {
+                rollback = true;
+                db.run('ROLLBACK', (rollbackErr) => {
+                  if (rollbackErr) {
+                    reject(rollbackErr);
+                  } else {
+                    reject(err);
+                  }
+                });
+                return;
+              }
+            });
+          });
+
+          if (!rollback) {
+            db.run('COMMIT', (commitErr) => {
+              if (commitErr) {
+                reject(commitErr);
+              } else {
+                resolve();
+              }
+            });
+          }
+        });
+      });
+    });
+  });
+};
+
+
+
+
+
+
+
+export { createGame, getGameById, getGamesByUserId, saveGameResults };
+
+
+
+/*
+
+
+
+
+
+const saveGameResults = async (gameData) => {
+  return new Promise((resolve, reject) => {
+    
     const insertRoundQuery = 'INSERT INTO rounds (game_id, meme_id, selected_caption_id, score) VALUES (?, ?, ?, ?)';
 
     console.log('gameData in DAO:', gameData);
@@ -127,7 +201,4 @@ const saveGameResults = async (gameData) => {
   });
 };
 
-
-
-
-export { createGame, getGameById, getGamesByUserId, saveGameResults };
+*/
