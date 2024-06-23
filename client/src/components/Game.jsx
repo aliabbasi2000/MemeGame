@@ -6,7 +6,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import GameOver from './GameOver';
 
 const TOTAL_ROUNDS = 3;
-const ROUND_TIME = 4;
+const ROUND_TIME = 30;
 
 function Game(props) {
   const [round, setRound] = useState(0);
