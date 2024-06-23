@@ -6,9 +6,8 @@ import 'react-circular-progressbar/dist/styles.css';
 
 const TOTAL_ROUNDS = 3;
 const ROUND_TIME = 30;
-const GAME_ID = 1; // Example gameId, replace with your logic to generate or fetch gameId
 
-function Game() {
+function Game(props) {
   const [round, setRound] = useState(0);
   const [meme, setMeme] = useState({});
   const [captions, setCaptions] = useState([]);
@@ -92,7 +91,7 @@ function Game() {
     }
 
     const roundData = {
-      gameId: GAME_ID,
+      userId: props.user.id,
       round: round + 1,
       meme_id: caption.memeId, // Ensure memeId is included here
       selected_caption_id: caption.id,
@@ -150,6 +149,8 @@ function Game() {
       </Container>
     );
   }
+
+  //console.log(gameData)
 
   return (
     <Container className="mt-5">
