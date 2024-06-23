@@ -104,8 +104,8 @@ function Captions(props) {
             backgroundColor:
               selectedCaptionId === caption.id
                 ? captionCorrectness[caption.id]
-                  ? 'green'
-                  : 'red'
+                  ? 'rgb(0, 200, 0)'
+                  : 'rgb(150, 0, 0)'
                 : ''
           }}
         >
@@ -123,31 +123,8 @@ function Captions(props) {
   );
 
 
-
-
 };
 
-
-/*
-
-    <Container className="text-center">
-      <h3>Captions for Meme {props.memeId}</h3>
-      {captions.map(caption => (
-        <Row key={caption.id} className="justify-content-center my-2">
-          <Col xs="auto">
-            <Button
-              onClick={() => handleCaptionClick(caption)}
-              style={{ width: '1000px', height: '40px', backgroundColor: 'white', color: 'black', border: '1px solid black' }}
-              
-            >
-              {caption.caption}
-            </Button>
-          </Col>
-        </Row>
-      ))}
-    </Container>
-
-*/
 
 
 export default Captions;

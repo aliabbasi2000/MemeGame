@@ -66,18 +66,6 @@ function MemeGame() {
   );
 }
 
-/*
-
-     <Container className="d-flex flex-column justify-content-center align-items-center vh-100">
-      <img src={meme.url} alt="Random Meme" />
-      <div>
-        <ul>
-        <Captions memeId={2}></Captions>
-        </ul>
-      </div>
-    </Container>
-
-*/
 
 
 export default MemeGame;

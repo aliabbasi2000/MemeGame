@@ -209,8 +209,8 @@ function Game(props) {
                         backgroundColor:
                           selectedCaptionId === caption.id
                             ? captionCorrectness[caption.id]
-                              ? 'green'
-                              : 'red'
+                              ? 'rgb(0, 200, 0)'
+                              : 'rgb(150, 0, 0)'
                             : hasSelected && caption.correct
                               ? 'yellow'
                               : '',
