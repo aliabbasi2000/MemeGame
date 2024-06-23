@@ -44,7 +44,7 @@ function Game(props) {
       const enhancedCaptions = fetchedCaptions.map((caption, index) => ({
         ...caption,
         correct: index < 2,
-        memeId: meme.id, // Add memeId here
+        memeId: meme.id, 
       }));
       const shuffledCaptions = shuffleArray(enhancedCaptions);
       setMeme(meme);
@@ -113,26 +113,21 @@ function Game(props) {
   };
 
   const nextRound = () => {
+    // insuring if the user does not click on the submit button we fetch the API and save the results
+    // before fetching the API insuring the gamedata is not empty by: (totalScore != 0) -> empty game data causes error in dao
+    if ((round === TOTAL_ROUNDS - 1)&&(totalScore !== 0)) {
+      submitGameData()}
+    else {
     setHasSelected(false);
     setSelectedCaptionId(null);
     setCaptionCorrectness({});
     setAlertMessage('');
     setAlertVariant('');
     setRound((prevRound) => prevRound + 1);
+    }
   };
 
-  const startGame = () => {
-    setRound(0);
-    setGameOver(false);
-    setHasSelected(false);
-    setSelectedCaptionId(null);
-    setCaptionCorrectness({});
-    setAlertMessage('');
-    setAlertVariant('');
-    setGameData([]);
-    setSubmissionSuccess(false);
-    setIsSubmitting(false);
-  };
+
 
   const submitGameData = async () => {
     setIsSubmitting(true);

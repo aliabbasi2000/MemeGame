@@ -40,6 +40,7 @@ function Profile(props) {
 
     const totalScore = calculateTotalScore(profileData.games);
     
+    let count = 0
 
     return (
         <Container className="my-5">
@@ -51,11 +52,12 @@ function Profile(props) {
                 </Col>
             </Row>
             {profileData.games.map((game) => {
+                count += 1
                 const gameTotalScore = game.rounds.reduce((acc, round) => acc + round.score, 0);
                 return (
                     <Card key={game.game_id} className="mb-4 shadow-sm">
                         <Card.Body>
-                            <Card.Title className="text-primary">Game ID: {game.game_id}</Card.Title>
+                            <Card.Title className="text-primary">Game No. {count}</Card.Title>
                             <Card.Subtitle className="mb-2 text-muted">Game Score: {gameTotalScore}</Card.Subtitle>
                             <Row>
                                 {game.rounds.map((round) => (
