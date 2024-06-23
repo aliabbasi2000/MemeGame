@@ -21,6 +21,9 @@ function Game(props) {
   const [gameOver, setGameOver] = useState(false);
   const [timer, setTimer] = useState(ROUND_TIME);
   const [gameData, setGameData] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionSuccess, setSubmissionSuccess] = useState(false);
+  const [totalScore, setTotalScore] = useState(0);
 
   const shuffleArray = (array) => {
     const shuffled = array.slice();
@@ -51,7 +54,8 @@ function Game(props) {
     } finally {
       setLoading(false);
     }
-  };
+  };  
+
 
   useEffect(() => {
     if (round < TOTAL_ROUNDS) {
@@ -73,6 +77,11 @@ function Game(props) {
     }
   }, [timer, hasSelected]);
 
+
+  //insuring that runs in strick mode
+  //useEffect(() => {console.log("TEST STRICKT MODE")}, []);
+
+  
   const handleCaptionClick = (caption) => {
     const isCorrect = caption.correct;
     setSelectedCaptionId(caption.id);
@@ -83,22 +92,23 @@ function Game(props) {
     setHasSelected(true);
 
     if (isCorrect) {
-      setAlertMessage('Bravo!!! You are Eligible for Becoming a Memer. Just Login and become a Sigma');
+      setAlertMessage('Bravo!!!');
       setAlertVariant('success');
     } else {
-      setAlertMessage('Wrong!!! Even don\'t try to login. Press that red button on your browser and Exit');
+      setAlertMessage('Wrong!!!');
       setAlertVariant('danger');
     }
 
     const roundData = {
       userId: props.user.id,
       round: round + 1,
-      meme_id: caption.memeId, // Ensure memeId is included here
+      meme_id: caption.memeId,
       selected_caption_id: caption.id,
       score: isCorrect ? 5 : 0,
     };
 
     setGameData((prevGameData) => [...prevGameData, roundData]);
+    setTotalScore((prevTotalScore) => prevTotalScore + roundData.score);
   };
 
   const nextRound = () => {
@@ -119,15 +129,22 @@ function Game(props) {
     setAlertMessage('');
     setAlertVariant('');
     setGameData([]);
+    setSubmissionSuccess(false);
+    setIsSubmitting(false);
   };
 
   const submitGameData = async () => {
+    setIsSubmitting(true);
     try {
       await API.submitGameResults(gameData);
-      alert('Game results submitted successfully!');
+      setAlertMessage('Game results submitted successfully!');
+      setAlertVariant('success');
+      setSubmissionSuccess(true);
     } catch (err) {
       console.error('Failed to submit game results:', err);
-      alert('Failed to submit game results.');
+      setAlertMessage('Failed to submit game results.');
+      setAlertVariant('danger');
+      setIsSubmitting(false);
     }
   };
 
@@ -145,28 +162,33 @@ function Game(props) {
     return (
       <Container className="text-center">
         <h3>Game Over! Thanks for playing!</h3>
+        <Alert variant={alertVariant}>
+          {alertMessage}
+        </Alert>
+        <h4>Your Total Score: {totalScore}</h4>
         <Button className="ml-2" onClick={startGame}>Play Again</Button>
       </Container>
     );
   }
 
   //console.log(gameData)
-
+  
   return (
     <Container className="mt-5">
-      <Row className="justify-content-center mb-4">
-        <div style={{ width: 100, height: 100 }}>
+      <Col>
+        <h2 className="text-muted">Round {round+1} of 3 </h2>
+        <div style={{ width: 230, height: 0 }}>
           <CircularProgressbar
             value={percentage}
             text={`${timer}s`}
             styles={buildStyles({
               textColor: '#000',
-              pathColor: '#f00',
+              pathColor: '#08e',
               trailColor: '#ddd',
             })}
           />
         </div>
-      </Row>
+      </Col>
       <Row className="justify-content-center">
         <Col md={6}>
           <Card>
@@ -178,7 +200,7 @@ function Game(props) {
               style={{ maxWidth: '80%', maxHeight: '80%' }}
             />
             <Card.Body className="text-center">
-              <Card.Title>"Memeify" the captions below to verify your Meme taste!</Card.Title>
+              <Card.Title>"Memeify" the captions below!</Card.Title>
               {alertMessage && (
                 <Alert variant={alertVariant} onClose={() => setAlertMessage('')} dismissible>
                   {alertMessage}
@@ -209,14 +231,20 @@ function Game(props) {
                 </Row>
               ))}
               {hasSelected && (
-                <Row className="justify-content-center my-4">
-                  {round === TOTAL_ROUNDS - 1 ? (
-                    <Button onClick={submitGameData}>Submit</Button>
-                  ) : (
-                    <Button onClick={nextRound}>Next Round</Button>
-                  )}
-                </Row>
-              )}
+              <Row className="justify-content-center my-4">
+                {round === TOTAL_ROUNDS - 1 ? (
+                  submissionSuccess ? null : (
+                    totalScore > 0 && (
+                      <Button onClick={submitGameData} disabled={isSubmitting}>
+                        {isSubmitting ? 'Submitting...' : 'Submit'}
+                      </Button>
+                    )
+                  )
+                ) : (
+                  <Button onClick={nextRound}>Next Round</Button>
+                )}
+              </Row>
+            )}
             </Card.Body>
           </Card>
         </Col>
