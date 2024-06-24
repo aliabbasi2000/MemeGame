@@ -15,7 +15,7 @@ function Captions(props) {
   // for showing the selection results for the user
   const [alertMessage, setAlertMessage] = useState('');
   const [alertVariant, setAlertVariant] = useState('');
-  // for inssuring that user can select only one caption
+  // for enssuring that user can select only one caption
   const [hasSelected, setHasSelected] = useState(false);
 
   useEffect(() => {
@@ -61,7 +61,7 @@ function Captions(props) {
       setAlertMessage('Bravo!!! You are Eligible for Becoming a Memer. Just Login and become a Sigma');
       setAlertVariant('success');
     } else {
-      setAlertMessage('Wrong!!! Even dont try to login. Press that red buttun on your browser and Exit');
+      setAlertMessage('Wrong!!! Even don\'t try to login. Press that red buttun on your browser and Exit');
       setAlertVariant('danger');
     }
   };
@@ -106,6 +106,8 @@ function Captions(props) {
                 ? captionCorrectness[caption.id]
                   ? 'rgb(0, 200, 0)'
                   : 'rgb(150, 0, 0)'
+                : hasSelected && caption.correct
+                ? 'yellow'
                 : ''
           }}
         >

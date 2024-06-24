@@ -25,6 +25,8 @@ function Game(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
   const [totalScore, setTotalScore] = useState(0);
+  //ensuring that memes are Unique in each game
+  const [usedMemes, setUsedMemes] = useState(new Set());
 
   const shuffleArray = (array) => {
     const shuffled = array.slice();
@@ -39,12 +41,24 @@ function Game(props) {
     setLoading(true);
     setError(null);
     try {
-      const meme = await API.getRandomMeme();
-      const fetchedCaptions = await API.getCaptionsByMemeId(meme.id);
+      let meme;
+      let fetchedCaptions;
+  
+      //ensuring that memes are Unique in each game
+      do {
+        meme = await API.getRandomMeme();
+      } while (usedMemes.has(meme.id));
+  
+      const updatedUsedMemes = new Set(usedMemes);
+      updatedUsedMemes.add(meme.id);
+      setUsedMemes(updatedUsedMemes);
+  
+      fetchedCaptions = await API.getCaptionsByMemeId(meme.id);
+  
       const enhancedCaptions = fetchedCaptions.map((caption, index) => ({
         ...caption,
         correct: index < 2,
-        memeId: meme.id, 
+        memeId: meme.id,
       }));
       const shuffledCaptions = shuffleArray(enhancedCaptions);
       setMeme(meme);
@@ -55,8 +69,7 @@ function Game(props) {
     } finally {
       setLoading(false);
     }
-  };  
-
+  };
 
   useEffect(() => {
     if (round < TOTAL_ROUNDS) {
@@ -112,12 +125,16 @@ function Game(props) {
     setTotalScore((prevTotalScore) => prevTotalScore + roundData.score);
   };
 
+  console.log(gameData)
+
   const nextRound = () => {
     // insuring if the user does not click on the submit button we fetch the API and save the results
     // before fetching the API insuring the gamedata is not empty by: (totalScore != 0) -> empty game data causes error in dao
-    if ((round === TOTAL_ROUNDS - 1)&&(totalScore !== 0)) {
+    if ((round === TOTAL_ROUNDS - 1)&&(gameData.length > 0)) {
+      console.log("I am trying to submit")
       submitGameData()}
     else {
+      console.log("I am not trying to submit")
     setHasSelected(false);
     setSelectedCaptionId(null);
     setCaptionCorrectness({});
@@ -225,7 +242,7 @@ function Game(props) {
               <Row className="justify-content-center my-4">
                 {round === TOTAL_ROUNDS - 1 ? (
                   submissionSuccess ? null : (
-                    totalScore > 0 && (
+                    gameData.length > 0 && (
                       <Button onClick={submitGameData} disabled={isSubmitting}>
                         {isSubmitting ? 'Submitting...' : 'Submit'}
                       </Button>
