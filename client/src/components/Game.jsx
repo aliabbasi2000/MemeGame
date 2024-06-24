@@ -189,13 +189,13 @@ function Game(props) {
   }
 
   const restartGame = () => {
-    window.location.reload(); // Reload the page
+    window.location.reload();
   };
 
   if (gameOver) {
     return(
       <Container className="d-flex flex-column align-items-center justify-content-start mt-5">
-      <h1 className="text-muted mb-4">You Didn't Play Any of Rounds, Bummer!</h1>
+      <h3 className="text-muted mb-4">You Didn't Play Any of Rounds, Bummer!</h3>
       <Button onClick={() => restartGame()}>Play Again</Button>
       </Container>
     )
