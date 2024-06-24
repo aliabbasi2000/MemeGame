@@ -1,37 +1,5 @@
 import { db } from '../db.mjs';
 
-// Create a new game
-const createGame = async (userId) => {
-  return new Promise((resolve, reject) => {
-    const sql = 'INSERT INTO games (user_id) VALUES ?';
-    db.run(sql, [userId], function(err) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(this.lastID); // Return the ID of the newly inserted game
-      }
-    });
-  });
-};
-
-
-// ????????????????????????????????????????????????????????????????.....
-// Get a game by ID
-const getGameById = async (gameId) => {
-  return new Promise((resolve, reject) => {
-    const sql = 'SELECT * FROM games WHERE id = ?';
-    db.get(sql, [gameId], (err, row) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(row);
-      }
-    });
-  });
-};
-
-
-
 // Get games and rounds for a user ID
 const getGamesByUserId = async (userId) => {
 
@@ -138,68 +106,4 @@ const saveGameResults = async (gameData) => {
 
 
 
-
-
-
-
-export { createGame, getGameById, getGamesByUserId, saveGameResults };
-
-
-
-/*
-
-
-
-
-
-const saveGameResults = async (gameData) => {
-  return new Promise((resolve, reject) => {
-    
-    const insertRoundQuery = 'INSERT INTO rounds (game_id, meme_id, selected_caption_id, score) VALUES (?, ?, ?, ?)';
-
-    console.log('gameData in DAO:', gameData);
-    
-    if (!Array.isArray(gameData)) {
-      return reject(new Error('Invalid gameData structure'));
-    }
-
-    db.serialize(() => {
-      db.run('BEGIN TRANSACTION', (err) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-
-        let rollback = false;
-
-        gameData.forEach((round) => {
-          db.run(insertRoundQuery, [round.gameId, round.meme_id, round.selected_caption_id, round.score], (err) => {
-            if (err) {
-              rollback = true;
-              db.run('ROLLBACK', (rollbackErr) => {
-                if (rollbackErr) {
-                  reject(rollbackErr);
-                } else {
-                  reject(err);
-                }
-              });
-              return;
-            }
-          });
-        });
-
-        if (!rollback) {
-          db.run('COMMIT', (commitErr) => {
-            if (commitErr) {
-              reject(commitErr);
-            } else {
-              resolve();
-            }
-          });
-        }
-      });
-    });
-  });
-};
-
-*/
+export { getGamesByUserId, saveGameResults };

@@ -1,6 +1,3 @@
-//import {Question, Answer} from './QAModels.mjs';
-
-
 const SERVER_URL = 'http://localhost:3001';
 
 // logIn
@@ -64,7 +61,7 @@ const getRandomMeme = async () => {
 };
 
 
-// get captions by memeId
+// Get seven possible captions for a given meme ID.
 const getCaptionsByMemeId = async (memeId) => {
   try {
     const response = await fetch(`${SERVER_URL}/api/meme/${memeId}/captions`);
@@ -80,32 +77,7 @@ const getCaptionsByMemeId = async (memeId) => {
 };
 
 
-
-//  Start a new game for the authenticated user.
-const startNewGame = async () => {
-  try {
-    const response = await fetch('/api/game/start', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include', // Include cookies in the request
-    });
-
-    if (response.ok) {
-      return await response.json();
-    } else {
-      const errorData = await response.json();
-      throw new Error(errorData.message);
-    }
-  } catch (err) {
-    console.error('Error starting a new game:', err);
-    throw err;
-  }
-};
-
-
-
+// Get Profile of user consist of games and rounds
 const getUserProfile = async (userId) => {
   const response = await fetch(`${SERVER_URL}/api/users/profile?user_id=${userId}`, {
     method: 'GET',
@@ -126,7 +98,7 @@ const getUserProfile = async (userId) => {
 
 
 
-
+// Save game results on the server
 export const submitGameResults = async (gameData) => {
   try {
     const response = await fetch(`${SERVER_URL}/api/submitGameResults`, {
@@ -134,6 +106,7 @@ export const submitGameResults = async (gameData) => {
       headers: {
         'Content-Type': 'application/json'
       },
+      credentials: 'include',
       body: JSON.stringify(gameData)
     });
     if (!response.ok) {
@@ -146,7 +119,7 @@ export const submitGameResults = async (gameData) => {
 };
 
 
-const API = { logIn, logOut, getUserInfo, getRandomMeme, getCaptionsByMemeId, startNewGame, getUserProfile, submitGameResults };
+const API = { logIn, logOut, getUserInfo, getRandomMeme, getCaptionsByMemeId, getUserProfile, submitGameResults };
 export default API;
 
 

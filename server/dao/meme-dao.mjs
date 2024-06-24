@@ -18,7 +18,7 @@ const getRandomMeme = () => {
 };
 
 
-
+// Function to get 7 captions for a meme: First 2 captions are the correct captions / other 5 captions are randomly generated
 const getCaptionsByMemeId = (memeId) => {
   return new Promise((resolve, reject) => {
     const bestCaptionsQuery = `

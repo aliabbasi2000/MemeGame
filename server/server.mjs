@@ -124,6 +124,7 @@ app.delete('/api/sessions/current', (req, res) => {
 });
 
 
+// -------------------APIs for Anonymous User------------------
 
 // GET /api/meme: Retrieves a random meme
 app.get('/api/meme', async (req, res) => {
@@ -140,7 +141,7 @@ app.get('/api/meme', async (req, res) => {
 });
 
 
-//  GET /api/meme/captions: Retrieves seven possible captions for a given meme picture.
+//  GET /api/meme/captions: Retrieves seven possible captions for a given meme.
 app.get('/api/meme/:memeId/captions', async (req, res) => {
   const memeId = req.params.memeId;
   try {
@@ -152,51 +153,15 @@ app.get('/api/meme/:memeId/captions', async (req, res) => {
   }
 });
 
+// ----------------------------------------------------------------
 
 
-// POST /api/game/start:  Starts a new game for the authenticated user.
+
+
+// --------------------APIs for Authenticated User-----------------
+
+// GET /api/users/profile: Get Profile of user consist of games and rounds
 // *Protected API
-app.post('/api/game/start', isLoggedIn, async (req, res) => {
-  try {
-    // Create a new game for the authenticated user
-    const gameId = await createGame(req.user.id);
-
-    // Fetch a random meme
-    const meme = await getRandomMeme();
-    if (!meme) {
-      return res.status(500).json({ message: 'Failed to retrieve a meme' });
-    }
-
-    // Fetch captions for the meme
-    const captions = await getCaptionsByMemeId(meme.id);
-    if (!captions) {
-      return res.status(500).json({ message: 'Failed to retrieve captions' });
-    }
-
-    // Prepare the response
-    const response = {
-      gameId: gameId,
-      meme: {
-        id: meme.id,
-        url: meme.url,
-      },
-      captions: captions.map(caption => ({
-        id: caption.id,
-        text: caption.caption,
-      })),
-    };
-
-    // Send the response
-    res.status(200).json(response);
-  } catch (error) {
-    console.error('Error starting a new game:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-});
-
-
-
-// GET /api/users/profile: Get games and rounds for a user ID
 app.get('/api/users/profile', isLoggedIn, async (req, res) => {
   const { user_id } = req.query;
   // console.log(`Received request for user_id: ${user_id}`); // Debug log
@@ -213,11 +178,9 @@ app.get('/api/users/profile', isLoggedIn, async (req, res) => {
 });
 
 
-
-
-
-
-app.post('/api/submitGameResults', async (req, res) => {
+// POST /api/submitGameResults: Save game results on the server
+// *Protected API
+app.post('/api/submitGameResults',isLoggedIn, async (req, res) => {
   const gameData = req.body;
   try {
     await saveGameResults(gameData);
@@ -226,6 +189,8 @@ app.post('/api/submitGameResults', async (req, res) => {
     res.status(500).send('Error saving game results: ' + err.message);
   }
 });
+
+// ----------------------------------------------------------------
 
 // start the server
 app.listen(port, () => { console.log(`API server started at http://localhost:${port}`); });

@@ -1,4 +1,3 @@
-/**  NEW **/
 import { db } from '../db.mjs';
 import crypto from 'crypto';
 
