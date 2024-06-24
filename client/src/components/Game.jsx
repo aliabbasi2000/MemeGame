@@ -3,7 +3,7 @@ import API from '../API.mjs';
 import { Container, Button, Alert, Card, Row, Col } from 'react-bootstrap';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import GameOver from './GameOver';
+import GameSummary from './GameSummary';
 
 const TOTAL_ROUNDS = 3;
 const ROUND_TIME = 30;
@@ -27,6 +27,8 @@ function Game(props) {
   const [totalScore, setTotalScore] = useState(0);
   //ensuring that memes are Unique in each game
   const [usedMemes, setUsedMemes] = useState(new Set());
+  //list of correctly selected captions for displaying in the GameSummary
+  const [correctAnswers, setCorrectAnswers] = useState([]);
 
   const shuffleArray = (array) => {
     const shuffled = array.slice();
@@ -106,10 +108,14 @@ function Game(props) {
     setHasSelected(true);
 
     if (isCorrect) {
-      setAlertMessage('Bravo!!!');
+      setAlertMessage('Bravo, You Earned 5 Points!!!');
       setAlertVariant('success');
+      setCorrectAnswers((prevCorrectAnswers) => [
+        ...prevCorrectAnswers,
+        { meme, caption }
+      ]);
     } else {
-      setAlertMessage('Wrong!!!');
+      setAlertMessage('Opss, Wrong!!!');
       setAlertVariant('danger');
     }
 
@@ -132,9 +138,15 @@ function Game(props) {
     // before fetching the API insuring the gamedata is not empty by: (totalScore != 0) -> empty game data causes error in dao
     if ((round === TOTAL_ROUNDS - 1)&&(gameData.length > 0)) {
       console.log("I am trying to submit")
-      submitGameData()}
+      submitGameData()
+      return(
+        <>
+        <GameSummary totalScore={totalScore} alertVariant={alertVariant} alertMessage={alertMessage} correctAnswers={correctAnswers}></GameSummary>
+        </>
+      )
+    }
     else {
-      console.log("I am not trying to submit")
+    console.log("I am not trying to submit")
     setHasSelected(false);
     setSelectedCaptionId(null);
     setCaptionCorrectness({});
@@ -153,6 +165,11 @@ function Game(props) {
       setAlertMessage('Game results submitted successfully!');
       setAlertVariant('success');
       setSubmissionSuccess(true);
+      return(
+        <>
+        <GameSummary totalScore={totalScore} alertVariant={alertVariant} alertMessage={alertMessage} correctAnswers={correctAnswers}></GameSummary>
+        </>
+      )
     } catch (err) {
       console.error('Failed to submit game results:', err);
       setAlertMessage('Failed to submit game results.');
@@ -171,10 +188,15 @@ function Game(props) {
     return <div>{error}</div>;
   }
 
+  const restartGame = () => {
+    window.location.reload(); // Reload the page
+  };
+
   if (gameOver) {
     return(
-      <Container>
-      <GameOver totalScore={totalScore} alertVariant={alertVariant} alertMessage={alertMessage}></GameOver>
+      <Container className="d-flex flex-column align-items-center justify-content-start mt-5">
+      <h1 className="text-muted mb-4">You Didn't Play Any of Rounds, Bummer!</h1>
+      <Button onClick={() => restartGame()}>Play Again</Button>
       </Container>
     )
   }
@@ -199,7 +221,7 @@ function Game(props) {
       </Col>}
       <Row className="justify-content-center">
         <Col md={6}>
-          <Card>
+          {!isSubmitting && <Card>
             <Card.Img
               variant="top"
               src={meme.url}
@@ -254,9 +276,9 @@ function Game(props) {
               </Row>
             )}
             </Card.Body>
-          </Card>
+          </Card>}
           <>
-          {isSubmitting && <GameOver totalScore={totalScore} alertVariant={alertVariant} alertMessage={alertMessage} />}
+          {isSubmitting && <GameSummary totalScore={totalScore} alertVariant={alertVariant} alertMessage={alertMessage} correctAnswers={correctAnswers}/>}
           </>
         </Col>
       </Row>

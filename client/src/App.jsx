@@ -91,7 +91,7 @@ function App() {
       {/* If loggedIn is false, redirect to home page; otherwise, render the Game component. */} 
       {/* For the case that user clicks on log out during the game */}
       <Route path='/game' element={
-        !loggedIn ? <Navigate replace to='/' /> : <Game user={user}/>
+        !loggedIn ? <Navigate replace to='/' /> : <Game user={user} loggedIn={loggedIn}/>
       } />
       <Route path="*" element={ <NotFound/> } />
 
