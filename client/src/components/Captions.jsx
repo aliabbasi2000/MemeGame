@@ -139,7 +139,7 @@ function Captions(props) {
                 ? captionCorrectness[caption.id]
                   ? 'rgb(0, 200, 0)'
                   : 'rgb(150, 0, 0)'
-                : timeUp && caption.correct
+                : (timeUp | hasSelected) && caption.correct
                 ? 'yellow'
                 : ''
           }}
