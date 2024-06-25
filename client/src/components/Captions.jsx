@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import API from '../API.mjs';
 import { Container, Button, Row, Col, Card, Alert  } from 'react-bootstrap';
 
+const ROUND_TIME = 30;
 
 function Captions(props) {
   const [captions, setCaptions] = useState([]);
@@ -17,6 +18,12 @@ function Captions(props) {
   const [alertVariant, setAlertVariant] = useState('');
   // for enssuring that user can select only one caption
   const [hasSelected, setHasSelected] = useState(false);
+
+  const [timer, setTimer] = useState(ROUND_TIME);
+  const [timeUp, setTimeUp] = useState(false);
+
+  // State to store interval ID
+  const [intervalId, setIntervalId] = useState(null);
 
   useEffect(() => {
     const fetchCaptions = async () => {
@@ -37,6 +44,26 @@ function Captions(props) {
     };
 
     fetchCaptions();
+
+    // Set up the countdown interval and store the ID in state
+    const id = setInterval(() => {
+      setTimer((prevTimer) => {
+        if (prevTimer <= 1) {
+          clearInterval(id);
+          setTimeUp(true);
+          setAlertMessage('Time is up! Here are the correct answers.');
+          setAlertVariant('warning');
+          return 0;
+        }
+        return prevTimer - 1;
+      });
+    }, 1000);
+
+    setIntervalId(id);
+
+    return () => {
+      clearInterval(id);
+    };
   }, [props.memeId]);
 
   const shuffleArray = (array) => {
@@ -49,6 +76,11 @@ function Captions(props) {
   };
 
   const handleCaptionClick = (caption) => {
+    if (timeUp || hasSelected) return;
+
+    // Clear the interval when a caption is clicked
+    clearInterval(intervalId);
+
     const isCorrect = caption.correct;
     setSelectedCaptionId(caption.id);
     setCaptionCorrectness(prevState => ({
@@ -87,26 +119,27 @@ function Captions(props) {
 
 
   return  (
-<div className="d-flex flex-column">
+    <div className="d-flex flex-column">
       {alertMessage && (
         <Alert variant={alertVariant} onClose={() => setAlertMessage('')} dismissible>
           {alertMessage}
         </Alert>
       )}
+      <div className="text-center">Time left: {timer}s</div>
       {captions.map(caption => (
         <Button
           key={caption.id}
           variant="outline-primary"
           className="my-2"
           onClick={() => handleCaptionClick(caption)}
-          disabled={hasSelected}
+          disabled={hasSelected || timeUp}
           style={{
             backgroundColor:
               selectedCaptionId === caption.id
                 ? captionCorrectness[caption.id]
                   ? 'rgb(0, 200, 0)'
                   : 'rgb(150, 0, 0)'
-                : hasSelected && caption.correct
+                : timeUp && caption.correct
                 ? 'yellow'
                 : ''
           }}
@@ -117,7 +150,7 @@ function Captions(props) {
       ))}
 
       <Card>
-      {hasSelected && <Button onClick={() => restartGame()}> Restart </Button>}
+      {(hasSelected || timeUp) && <Button onClick={() => restartGame()}> Restart </Button>}
       </Card>
 
     </div>
