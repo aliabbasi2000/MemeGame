@@ -12,6 +12,7 @@
 - Route `/something/:param`: page content and purpose, param specification
 - ...
 
+![routes](/img/design/routes.PNG)
 
 ## Main React Components 
 
@@ -111,12 +112,13 @@
 - Table `rounds` - has the information of rounds
   - id, game_id, meme_id, selected_caption_id, score
 
+![database](/img/design/db.PNG)
 
 ## Screenshots
 
-![Screenshot1](./img/screenshot.jpg)
+![Screenshot1](/img/screenshots/screenshot1.png)
 
-![Screenshot2](./img/screenshot.jpg)
+![Screenshot2](/img/screenshots/screenshot2.png)
 
 
 ## Users Credentials
