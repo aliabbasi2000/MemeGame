@@ -189,4 +189,6 @@ app.post('/api/submitGameResults',isLoggedIn, async (req, res) => {
 // ----------------------------------------------------------------
 
 // start the server
+export const startServer = () => {
 app.listen(port, () => { console.log(`API server started at http://localhost:${port}`); });
+}
