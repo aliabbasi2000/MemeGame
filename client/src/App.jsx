@@ -17,7 +17,7 @@ function App() {
   const [user, setUser] = useState(''); 
   const navigate = useNavigate();
 
-  // Useless
+
   useEffect(() => {
     const checkAuth = async () => {
       const user = await API.getUserInfo(); 
@@ -59,7 +59,7 @@ function App() {
     navigate('/game');
   };
 
-  console.log(user)
+  //console.log(user)
 
   return (
 

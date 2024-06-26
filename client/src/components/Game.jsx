@@ -4,6 +4,7 @@ import { Container, Button, Alert, Card, Row, Col } from 'react-bootstrap';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import GameSummary from './GameSummary';
+import { useNavigate } from 'react-router-dom';
 
 const TOTAL_ROUNDS = 3;
 const ROUND_TIME = 30;
@@ -29,6 +30,7 @@ function Game(props) {
   const [usedMemes, setUsedMemes] = useState(new Set());
   //list of correctly selected captions for displaying in the GameSummary
   const [correctAnswers, setCorrectAnswers] = useState([]);
+  const navigate = useNavigate();
 
   const shuffleArray = (array) => {
     const shuffled = array.slice();
@@ -131,7 +133,7 @@ function Game(props) {
     setTotalScore((prevTotalScore) => prevTotalScore + roundData.score);
   };
 
-  console.log(gameData)
+  //console.log(gameData)
 
   const nextRound = () => {
     // insuring if the user does not click on the submit button we fetch the API and save the results
@@ -189,9 +191,10 @@ function Game(props) {
   }
 
   const restartGame = () => {
-    window.location.reload();
+    navigate('/');
   };
 
+  // For idle user that played 0 rounds
   if (gameOver) {
     return(
       <Container className="d-flex flex-column align-items-center justify-content-start mt-5">

@@ -27,7 +27,7 @@ function MemeGame() {
   }, []);
 
   // meme object (id, url)
-  console.log(meme)
+  //console.log(meme)
 
 
   if (!meme) return <div>Loading...</div>;
