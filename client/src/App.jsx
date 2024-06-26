@@ -17,14 +17,19 @@ function App() {
   const [user, setUser] = useState(''); 
   const navigate = useNavigate();
 
+  // Useless
   useEffect(() => {
     const checkAuth = async () => {
-      const user = await API.getUserInfo(); // we have the user info here
+      const user = await API.getUserInfo(); 
       setLoggedIn(true);
       setUser(user);
     };
-    checkAuth();
-  }, []);
+    if (loggedIn) {
+      checkAuth();
+    }
+    //Change dependency array to check the authentication if is logged in.
+  }, [loggedIn]);
+  
 
   // Login
   const handleLogin = async (credentials) => {

@@ -180,9 +180,9 @@ app.post('/api/submitGameResults',isLoggedIn, async (req, res) => {
   const gameData = req.body;
   try {
     await saveGameResults(gameData);
-    res.status(200).send('Game results saved successfully');
+    res.status(200).json({ message: 'Game results saved successfully' });
   } catch (err) {
-    res.status(500).send('Error saving game results: ' + err.message);
+    res.status(500).json({ error: 'Error saving game results: ' + err.message });
   }
 });
 
