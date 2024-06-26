@@ -124,7 +124,6 @@ app.delete('/api/sessions/current', (req, res) => {
 });
 
 
-// -------------------APIs for Anonymous User------------------
 
 // GET /api/meme: Retrieves a random meme
 app.get('/api/meme', async (req, res) => {
@@ -152,9 +151,6 @@ app.get('/api/meme/:memeId/captions', async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve Captions' });
   }
 });
-
-// ----------------------------------------------------------------
-
 
 
 

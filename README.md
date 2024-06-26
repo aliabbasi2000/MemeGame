@@ -16,83 +16,68 @@
 
 ## Main React Components 
 
-- `ListOfSomething` (in `List.js`): component purpose and main functionality
-- `GreatButton` (in `GreatButton.js`): component purpose and main functionality
-- ...
+- `LoginForm` (in `AuthComponents.jsx`): Component: A Login Form -> perform login
+- `MemeGame` (in `MemeGame.jsx`):  Component: A Game Card Containing the Meme img and the Captions Component  ->  fetch the image URL from the server and display - **For Anonymous User**
+- `Captions` (in `Captions.jsx`): Component: 7 Captions -> get the meme ID from Father component(MemeGame) and fetch an API to get 7 cptions to that meme ID. User can select one Caption in 30 sec and see the result. - **For Anonymous User**
+- `Game` (in `Game.jsx`): Component: A Game consist of 3 rounds that each round is consist of meme img and the captions and a 30sec timer that user can select one caption in this time and the score for each game will be calculated. -> 3 functions to fetch API: 1.get a random meme 2.get 7 captions for that meme ID 3.submir the results after final round. - **For Authenticated User**
+- `GameSummary` (in `GameSummary.jsx`): Component: A summary consist of the memes that Selected correctly with the selected captions -> Gets the total score and the correctly guessed memes from the father component(Game) and display them. - **For Authenticated User**
+- `Profile` (in `Profile.jsx`):  Component: A profile Page consist of username of user, total score, and the history of all the games played(At least one round shoud be played to be recorded in our history) -> fetch an api to get the user data and calculate the total score of all the games - **For Authenticated User**
 
-(only _main_ components, minor ones may be skipped)
+NOTE: The Validation of the selected Captions are not happening in the Server. From the list of 7 captions that are sent from the server side, the first 2 are the correct captions.
+
 
 
 ## API Server
 
-- POST /api/login: Authenticates a user and starts a session.
+**Public APIs**
+
+- POST /api/sessions: Authenticates a user and starts a session.
   - Request Body: { username: string, password: string }
   - Response: { message: Login successful, user: { id: integer, username: string }}
   - response status codes:
       - 200: OK - Login successful.
-      - 400: Bad Request - Invalid request body or missing parameters.
       - 401: Unauthorized - Incorrect username or password.
 
-- POST /api/logout : Logs out the authenticated user and ends the session.
+- GET /api/sessions/current: Retrieves the current authenticated user's session.
+  - Response: { id: integer, username: string }
+  - Response Status Codes:
+      - 200: OK - User is authenticated.
+      - 401: Unauthorized - Not authenticated.
+
+- DELETE  /api/sessions/current: Logs out the authenticated user and ends the session.
   - Request Body: None
-  - Response: { message: Logout successful }
+  - Response: None
   - Response Status Codes:
       - 200: OK - Logout successful.
 
-- GET /api/meme: Retrieves a random meme picture.
+- GET /api/meme: Retrieves a random meme.
   - request parameters: None
   - Response: { meme: { id: integet, url: string } }
   - response status codes:
       - 200: OK - Meme retrieved successfully.
-      - 500: Internal Server Error - Server error while retrieving meme.
+      - 404: Not Found - No meme found.
+      - 500: Internal Server Error - Failed to retrieve a meme.
 
-- GET /api/meme/captions: Retrieves seven possible captions for a given meme picture.
+- GET /api/meme/captions: Retrieves seven possible captions for a given meme.
   - request Parameters: memeId
   - Response: { captions: [{ id: integer, text: string }, { id: integer, text: string },...] }
       - 200: OK - Captions retrieved successfully.
-      - 500: Internal Server Error - Server error while retrieving captions.
+      - 500: Internal Server Error - Failed to retrieve captions.
 
+**Protected APIs**
 
 - GET /api/users/profile: Retrieves the profile information and game history of the authenticated user.
-  - Path Parameters: userId (user ID)
-  - Response: { user: { id: integer, username: string, totalScore: integer }, games: [{ id: integer, date: string, score: integer, rounds: [{ meme: { id: integer, url: string }, score: integer, correctCaption: string, guessedCaption: string }] }] }
+  - Request Query: ?user_id=integer
+  - Response: { games: [{ gameId: integer, rounds: [{ roundId: integer, score: integer }] }] }
   - response status code:
-      - 200: OK - Profile and game history retrieved successfully.
-      - 404: Not Found - User not found.
-      - 500: Internal Server Error - Server error while retrieving profile.
+      - 200: OK - Profile retrieved successfully.
+      - 500: Internal Server Error - Failed to fetch user profile.
 
-
-
-
-- POST /api/game/start:  Starts a new game for the authenticated user.
-  - Request Body: None
-  - Response: { gameId: integer, meme: { id: integer, url: string }, captions: [{ id: integer, text: string }] }
-  - response status codes:
-      - 200: OK - New game started successfully.
-      - 500: Internal Server Error - Server error while starting a new game.
-
-- POST /api/game/round:  Starts a new round in an existing game.
-  - Path Parameters: gameId,
-  - Request Body: None
-  - Response:{ round: integer, meme: { id: integer, url: string }, captions: [{ id: integer, text: string }] }
-  - response status codes:
-      - 200: OK - New round started successfully.
-      - 400: Bad Request - Invalid request body or parameters.
-      - 404: Not Found - Game or round not found.
-      - 500: Internal Server Error - Server error while starting a new round.
-
-
-- POST /api/game/round/guess:  Submits a guess for a round.
-  - Path Parameters: gameId, roundId 
-  - Request Body: { captionId: integer }
-  - Response:{ correct: boolean, score: integer, bestCaptions: [{ id: integer, text: string }] }
-  - response status codes:
-      - 200: OK - The guess was successfully processed. (It was Correct OR Incorrect)
-      - 400: Bad Request - Invalid request body or parameters.
-      - 404: Not Found - Game or round not found.
-      - 500: Internal Server Error - Server error while starting a new round.
-
-      
+ - POST /api/submitGameResults: Saves game results on the server.
+  - Request Body: { userId: integer, gameId: integer, rounds: [{ roundId: integer, score: integer }] }
+  - Response Status Codes:
+      - 200: OK - Game results saved successfully.
+      - 500: Internal Server Error - Error saving game results.
 
 
 
