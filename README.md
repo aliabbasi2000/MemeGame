@@ -108,7 +108,10 @@ NOTE: The Validation of the selected Captions are not happening in the Server. F
 
 ## Users Credentials
 
-- below is information about users:
-- username, password, salt
-- aliabbasi, aliabbasi (Hashed pass: f35e38aa664197a900eabaf78e288a97cbb1950d7c0ac61f556df4353a9cd0d0, Salt: 3b9f578ae406fcbb)
-- user1, user1pass (Hashed pass: 23ef35c5e03b3dfe9f53b5c3dc22a39e25ea881062ff4a6da5e724a8bff549a3, Salt: e818f0647b4e1fe0)
+- Below is Credentials of 2 users:
+
+- 1 - **username**: aliabbasi, **password**: aliabbasi 
+(Hashed pass: f35e38aa664197a900eabaf78e288a97cbb1950d7c0ac61f556df4353a9cd0d0, Salt: 3b9f578ae406fcbb)
+
+- 2 -  **username**: user1, **password**: user1 
+(Hashed pass: 23ef35c5e03b3dfe9f53b5c3dc22a39e25ea881062ff4a6da5e724a8bff549a3, Salt: e818f0647b4e1fe0)
