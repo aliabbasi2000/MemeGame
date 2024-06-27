@@ -1,5 +1,5 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/AVMm0VzU)
-# Exam #1: "Exam Title: What do you meme?" board game."
+# Exam 1: "Exam Title: What do you meme? "
 ## Student: s323638 ABBASI ALI 
 
 ## React Client Application Routes
@@ -9,8 +9,7 @@
 - Route `/demogame`: Demo Game Page - The gane page for the annonimous user
 - Route `/game`: Game Page - The gane page for the Authenticated user
 - Route `/profile`: user profile Page - consist of the Games that user played before and the meme and the score of them for each round
-- Route `/something/:param`: page content and purpose, param specification
-- ...
+
 
 ![routes](/img/design/routes.PNG)
 
@@ -73,7 +72,7 @@ NOTE: The Validation of the selected Captions are not happening in the Server. F
       - 200: OK - Profile retrieved successfully.
       - 500: Internal Server Error - Failed to fetch user profile.
 
- - POST /api/submitGameResults: Saves game results on the server.
+- POST /api/submitGameResults: Saves game results on the server.
   - Request Body: { userId: integer, gameId: integer, rounds: [{ roundId: integer, score: integer }] }
   - Response Status Codes:
       - 200: OK - Game results saved successfully.
@@ -110,8 +109,8 @@ NOTE: The Validation of the selected Captions are not happening in the Server. F
 
 - Below is Credentials of 2 users:
 
-- 1 - **username**: aliabbasi, **password**: aliabbasi 
+- 1 - **username:** aliabbasi, **password:** aliabbasi 
 (Hashed pass: f35e38aa664197a900eabaf78e288a97cbb1950d7c0ac61f556df4353a9cd0d0, Salt: 3b9f578ae406fcbb)
 
-- 2 -  **username**: user1, **password**: user1 
+- 2 -  **username:** user1, **password:** user1 
 (Hashed pass: 23ef35c5e03b3dfe9f53b5c3dc22a39e25ea881062ff4a6da5e724a8bff549a3, Salt: e818f0647b4e1fe0)
