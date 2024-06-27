@@ -150,8 +150,16 @@ app.get('/api/meme', async (req, res) => {
 });
 
 
-//  GET /api/meme/captions: Retrieves seven possible captions for a given meme.
-app.get('/api/meme/:memeId/captions', async (req, res) => {
+//  GET /api/meme/:memeId/captions: Retrieves seven possible captions for a given meme.
+app.get('/api/meme/:memeId/captions', [
+  // Validate memeId
+  check('memeId').isInt({ min: 1, max: 10 }).withMessage('Meme ID must be a valid integer between 1 and 10'),
+  ], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const memeId = req.params.memeId;
   try {
     const captions = await getCaptionsByMemeId(memeId);
