@@ -7,7 +7,7 @@ import GameSummary from './GameSummary';
 import { useNavigate } from 'react-router-dom';
 
 const TOTAL_ROUNDS = 3;
-const ROUND_TIME = 30;
+const ROUND_TIME = 3;
 
 function Game(props) {
   const [round, setRound] = useState(0);

@@ -84,10 +84,20 @@ app.use(passport.authenticate('session'));
 
 
 // POST /api/sessions
-app.post('/api/sessions', function(req, res, next) {
+app.post('/api/sessions', [
+  // Validate username and password
+  check('username', 'Username is required').notEmpty(),
+  check('password', 'Password is required').notEmpty(),
+  ], (req, res, next) => {
 
-  // this function is called only if the authenticatuion was successful
-  //req.user contains the authenticated user
+  // Find the validation errors in this request and wrap them in an object
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  // This function is called only if the authentication was successful
+  // req.user contains the authenticated user
   passport.authenticate('local', (err, user, info) => {
     if (err)
       return next(err);
