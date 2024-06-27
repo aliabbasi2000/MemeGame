@@ -2,7 +2,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
-import {check, validationResult} from 'express-validator';
+import {check, validationResult, body } from 'express-validator';
 import {getUser} from './dao/user-dao.mjs';
 import { getRandomMeme,getCaptionsByMemeId } from './dao/meme-dao.mjs';
 import {getGamesByUserId, saveGameResults} from './dao/game-dao.mjs';
@@ -186,15 +186,35 @@ app.get('/api/users/profile', isLoggedIn, async (req, res) => {
 
 // POST /api/submitGameResults: Save game results on the server
 // *Protected API
-app.post('/api/submitGameResults',isLoggedIn, async (req, res) => {
-  const gameData = req.body;
-  try {
-    await saveGameResults(gameData);
-    res.status(200).json({ message: 'Game results saved successfully' });
-  } catch (err) {
-    res.status(500).json({ error: 'Error saving game results: ' + err.message });
-  }
-});
+const validateGameData = [
+  body().isArray().withMessage('Game data should be an array'),
+  body('*.userId').isInt().withMessage('User ID should be an integer'),
+  body('*.round').isInt().withMessage('Round should be an integer'),
+  body('*.meme_id').isInt().withMessage('Meme ID should be an integer'),
+  body('*.selected_caption_id').isInt().withMessage('Selected caption ID should be an integer'),
+  body('*.score').isInt().withMessage('Score should be an integer'),
+  body().custom((value) => {
+    if (value.length < 1 || value.length > 3) {
+      throw new Error('Array length should be between 1 and 3');
+    }
+    return true;
+  })
+];
+
+app.post('/api/submitGameResults',isLoggedIn, validateGameData ,async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+  
+    const gameData = req.body;
+    try {
+      await saveGameResults(gameData);
+      res.status(200).json({ message: 'Game results saved successfully' });
+    } catch (err) {
+      res.status(500).json({ error: 'Error saving game results: ' + err.message });
+    }
+  });
 
 // ----------------------------------------------------------------
 

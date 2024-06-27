@@ -1,2 +1,40 @@
 
-GET  http://localhost:3001/meme
+POST http://localhost:3001/api/submitGameResults
+Content-Type: application/json
+Accept: application/json
+
+[
+  {
+    "userId": 2,
+    "round": 1,
+    "meme_id": 7,
+    "selected_caption_id": 36,
+    "score": 5
+  },
+
+]
+
+###
+
+POST  http://localhost:3001/api/sessions
+Content-Type: application/json
+
+{
+    "username": "user1",
+    "password": "user1"
+}
+
+###
+
+
+GET  http://localhost:3001/api/meme/1/captions
+
+###
+
+GET  http://localhost:3001/api/meme
+
+###
+
+
+GET  http://localhost:3001/api/users/profile 
+
