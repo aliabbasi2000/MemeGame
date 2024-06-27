@@ -38,5 +38,5 @@ Accept: application/json
 ###
 
 
-GET http://localhost:3001/api/users/profile
+GET http://localhost:3001/api/users/profile?user_id=1
 

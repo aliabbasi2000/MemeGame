@@ -45,9 +45,12 @@ function Captions(props) {
 
     fetchCaptions();
 
-    // Set up the countdown interval and store the ID in state
+    // Set up the countdown 30 sec timer.
+    // setInterval built-in JS function to repeatedly call a function with a fixed time delay between each call.
     const id = setInterval(() => {
+      // update timer state
       setTimer((prevTimer) => {
+        // If prevTimer is less than or equal to 1, it means the timer is about to reach zero.
         if (prevTimer <= 1) {
           clearInterval(id);
           setTimeUp(true);
@@ -55,8 +58,10 @@ function Captions(props) {
           setAlertVariant('warning');
           return 0;
         }
+        //Decrements the timer by 1
         return prevTimer - 1;
       });
+    // Set the interval duration to 1000 milliseconds (1 second)
     }, 1000);
 
     setIntervalId(id);
@@ -120,6 +125,7 @@ function Captions(props) {
 
   return  (
     <div className="d-flex flex-column">
+      {/* If there is an alert show the alertMessage */}
       {alertMessage && (
         <Alert variant={alertVariant} onClose={() => setAlertMessage('')} dismissible>
           {alertMessage}

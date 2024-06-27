@@ -31,6 +31,7 @@ function Profile(props) {
         return <div>Loading...</div>;
       }
 
+    // calculate total score
     const calculateTotalScore = (games) => {
     return games.reduce((acc, game) => {
         const gameTotal = game.rounds.reduce((roundAcc, round) => roundAcc + round.score, 0);
