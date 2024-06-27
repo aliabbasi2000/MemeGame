@@ -13,11 +13,13 @@ import Footer from './components/Footer';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+  // welcome msg to the logged in user
   const [message, setMessage] = useState(''); 
   const [user, setUser] = useState(''); 
   const navigate = useNavigate();
 
 
+  // check the authentication status
   useEffect(() => {
     const checkAuth = async () => {
       const user = await API.getUserInfo(); 
@@ -27,7 +29,7 @@ function App() {
     if (loggedIn) {
       checkAuth();
     }
-    //Change dependency array to check the authentication if is logged in.
+    //Change dependency array to check the authentication whenever loggedin state changes.
   }, [loggedIn]);
   
 
@@ -77,11 +79,13 @@ function App() {
         <Container className='d-flex flex-column justify-content-start align-items-center vh-100'>
           <Row className='justify-content-center mt-5'>
             <Col className='text-center'>
-              
+            
+            {/* Home Page for Anonymos user */}
             {!loggedIn && <h1  className="h2">What Do You Meme? </h1>}
             {!loggedIn && <p> Get ready to test your creativity and humor!! <br/> Click the Button below </p>}
             {!loggedIn && <Button variant="primary" onClick={startDemoGame} className='mt-3'>Start demo Game</Button>}
 
+            {/* Home Page for Authenticatef user */}
             {loggedIn && <h1  className="h3">Welcome to the Meme Game! </h1>}
             {loggedIn && <p>Click the button below to start the Real Game!</p>}
             {loggedIn && <Button variant="primary" onClick={startGame} className='mt-3'>Let the Memes Begin</Button>}

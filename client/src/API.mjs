@@ -1,13 +1,13 @@
 const SERVER_URL = 'http://localhost:3001';
 
-// logIn
+// fethc logIn API
 const logIn = async (credentials) => {
   const response = await fetch(SERVER_URL + '/api/sessions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include',
+    credentials: 'include', // include credentials to ensure that session cookies are included in the request.
     body: JSON.stringify(credentials),
   });
   if(response.ok) {
@@ -20,7 +20,8 @@ const logIn = async (credentials) => {
   }
 };
 
-// getUserInfo
+
+// Get the Info of Authenticated user
 const getUserInfo = async () => {
   const response = await fetch(SERVER_URL + '/api/sessions/current', {
     credentials: 'include',
@@ -33,7 +34,8 @@ const getUserInfo = async () => {
   }
 };
 
-// Logout
+
+// Preform Logout
 const logOut = async() => {
   const response = await fetch(SERVER_URL + '/api/sessions/current', {
     method: 'DELETE',

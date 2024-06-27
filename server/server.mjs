@@ -2,7 +2,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
-import {check, validationResult, body } from 'express-validator';
+import {check, validationResult, body, query } from 'express-validator';
 import {getUser} from './dao/user-dao.mjs';
 import { getRandomMeme,getCaptionsByMemeId } from './dao/meme-dao.mjs';
 import {getGamesByUserId, saveGameResults} from './dao/game-dao.mjs';
@@ -176,20 +176,35 @@ app.get('/api/meme/:memeId/captions', [
 
 // GET /api/users/profile: Get Profile of user consist of games and rounds
 // *Protected API
-app.get('/api/users/profile', isLoggedIn, async (req, res) => {
-  const { user_id } = req.query;
-  // console.log(`Received request for user_id: ${user_id}`); // Debug log
-  try {
-    const gamesinfo = await getGamesByUserId(user_id);
-    // console.log('Fetched gamesinfo:', gamesinfo); // Debug log
-    res.json({
-      games: gamesinfo
-    });
-  } catch (err) {
-    console.error('Error fetching user profile:', err);
-    res.status(500).json({ error: 'Failed to fetch user profile' });
+app.get(
+  '/api/users/profile',
+  isLoggedIn,
+  [
+    query('user_id')
+      .exists().withMessage('user_id is required')
+      .isInt({ min: 1 }).withMessage('user_id must be a integer')
+  ],
+  async (req, res) => {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { user_id } = req.query;
+    // console.log(`Received request for user_id: ${user_id}`); // Debug log
+    try {
+      const gamesinfo = await getGamesByUserId(user_id);
+      // console.log('Fetched gamesinfo:', gamesinfo); // Debug log
+      res.json({
+        games: gamesinfo
+      });
+    } catch (err) {
+      console.error('Error fetching user profile:', err);
+      res.status(500).json({ error: 'Failed to fetch user profile' });
+    }
   }
-});
+);
 
 
 
