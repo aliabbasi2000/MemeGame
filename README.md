@@ -4,11 +4,11 @@
 
 ## React Client Application Routes
 
-- Route `/`: Home page - consist of a start button to start the game & Login Button
-- Route `/Login`: Login page - consist of a login form to perform Authentication
-- Route `/demogame`: Demo Game Page - The gane page for the annonimous user
-- Route `/game`: Game Page - The gane page for the Authenticated user
-- Route `/profile`: user profile Page - consist of the Games that user played before and the meme and the score of them for each round
+- Route `/`: Home page - consists of a start button to start the game & Login Button
+- Route `/Login`: Login page - consists of a login form to perform Authentication
+- Route `/demogame`: Demo Game Page - The game page for the anonymous user
+- Route `/game`: Game Page - The game page for the Authenticated user
+- Route `/profile`: user profile Page - consists of the Games that the user played before and the meme and the score of them for each round
 
 
 ![routes](/img/design/routes.PNG)
@@ -18,11 +18,11 @@
 - `LoginForm` (in `AuthComponents.jsx`): Component: A Login Form -> perform login
 - `MemeGame` (in `MemeGame.jsx`):  Component: A Game Card Containing the Meme img and the Captions Component  ->  fetch the image URL from the server and display - **For Anonymous User**
 - `Captions` (in `Captions.jsx`): Component: 7 Captions -> get the meme ID from Father component(MemeGame) and fetch an API to get 7 cptions to that meme ID. User can select one Caption in 30 sec and see the result. - **For Anonymous User**
-- `Game` (in `Game.jsx`): Component: A Game consist of 3 rounds that each round is consist of meme img and the captions and a 30sec timer that user can select one caption in this time and the score for each game will be calculated. -> 3 functions to fetch API: 1.get a random meme 2.get 7 captions for that meme ID 3.submir the results after final round. - **For Authenticated User**
-- `GameSummary` (in `GameSummary.jsx`): Component: A summary consist of the memes that Selected correctly with the selected captions -> Gets the total score and the correctly guessed memes from the father component(Game) and display them. - **For Authenticated User**
-- `Profile` (in `Profile.jsx`):  Component: A profile Page consist of username of user, total score, and the history of all the games played(At least one round shoud be played to be recorded in our history) -> fetch an api to get the user data and calculate the total score of all the games - **For Authenticated User**
+- `Game` (in `Game.jsx`): Component: A Game consists of 3 rounds. each round consists of a meme img and 7 possible captions and a 30sec timer in which the user can select one caption in this time and the score for each game will be calculated. -> 3 functions to fetch API: 1.get a random meme 2.get 7 captions for that meme ID 3. submit the results after final round. - **For Authenticated User**
+- `GameSummary` (in `GameSummary.jsx`): Component: A summary consists of the memes that are Selected correctly with the selected captions -> Gets the total score and the correctly guessed memes from the father component(Game) and displays them. - **For Authenticated User**
+- `Profile` (in `Profile.jsx`):  Component: A profile Page consists of username of the user, total score, and the history of all the games played(At least one round should be played to be recorded in our history) -> fetch an API to get the user data and calculate the total score of all the games - **For Authenticated User**
 
-NOTE: The Validation of the selected Captions are not happening in the Server. From the list of 7 captions that are sent from the server side, the first 2 are the correct captions.
+NOTE: The Validation of the selected Captions is not happening in the Server. From the list of 7 captions that are sent from the server side, the first 2 are the correct captions.
 
 
 
@@ -107,7 +107,7 @@ NOTE: The Validation of the selected Captions are not happening in the Server. F
 
 ## Users Credentials
 
-- Below is Credentials of 2 users:
+- Below is the Credentials of 2 users:
 
 - 1 - **username:** aliabbasi, **password:** aliabbasi 
 (Hashed pass: f35e38aa664197a900eabaf78e288a97cbb1950d7c0ac61f556df4353a9cd0d0, Salt: 3b9f578ae406fcbb)
