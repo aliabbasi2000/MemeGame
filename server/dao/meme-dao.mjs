@@ -1,7 +1,7 @@
 import { db } from '../db.mjs';
 
 
-// Function to get a random meme from db
+// Get a random meme from db
 const getRandomMeme = () => {
   return new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM memes ORDER BY RANDOM() LIMIT 1';
@@ -18,7 +18,7 @@ const getRandomMeme = () => {
 };
 
 
-// Function to get 7 captions for a meme: First 2 captions are the correct captions / other 5 captions are randomly generated
+// Get 7 captions for a meme: First 2 captions are the correct captions / other 5 captions are randomly generated from the false captions
 const getCaptionsByMemeId = (memeId) => {
   return new Promise((resolve, reject) => {
     const bestCaptionsQuery = `
@@ -51,6 +51,7 @@ const getCaptionsByMemeId = (memeId) => {
           reject(err);
         } else {
 
+          // Concatenate the Correct captions with wrong captions (Keeping the order of them)
           const result = [...bestCaptions, ...otherCaptions]
 
           // !!! Dont need to validate the answers on server side. we send unsuffelled list to client so client can recognize the correct captions

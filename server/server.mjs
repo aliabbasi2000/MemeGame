@@ -192,9 +192,11 @@ app.get('/api/users/profile', isLoggedIn, async (req, res) => {
 });
 
 
+
 // POST /api/submitGameResults: Save game results on the server
 // *Protected API
-const validateGameData = [
+app.post('/api/submitGameResults',isLoggedIn, [
+  // Validate GameData
   body().isArray().withMessage('Game data should be an array'),
   body('*.userId').isInt().withMessage('User ID should be an integer'),
   body('*.round').isInt().withMessage('Round should be an integer'),
@@ -207,9 +209,7 @@ const validateGameData = [
     }
     return true;
   })
-];
-
-app.post('/api/submitGameResults',isLoggedIn, validateGameData ,async (req, res) => {
+  ] ,async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });

@@ -1,6 +1,6 @@
 import { db } from '../db.mjs';
 
-// Get games and rounds for a user ID
+// Get games and rounds for a user ID by (Joining the games table with rounds & memes)
 const getGamesByUserId = async (userId) => {
 
   const sql = `
@@ -45,14 +45,15 @@ const getGamesByUserId = async (userId) => {
 
 
 
-// Save game results to the database
+// Save game Data to the games and rounds table
 const saveGameResults = async (gameData) => {
   return new Promise((resolve, reject) => {
     const insertGameSQL = 'INSERT INTO games (user_id) VALUES (?)';
     const insertRoundSQL = 'INSERT INTO rounds (game_id, meme_id, selected_caption_id, score) VALUES (?, ?, ?, ?)';
 
-    console.log('gameData in DAO:', gameData);
+    //console.log('gameData in DAO:', gameData); //Logging
 
+    // Start a serialized database transaction and Begin a transaction
     db.serialize(() => {
       db.run('BEGIN TRANSACTION', (err) => {
         if (err) {
@@ -60,9 +61,12 @@ const saveGameResults = async (gameData) => {
           return;
         }
 
+        // Set the rollback flag to false initially.
         let rollback = false;
 
-        // becarful of empty gamedata that can be sent from the client in that case game[0] can cause an error
+        // Insert Game Record into games table
+        // Picking the userID from the first object of the gamedata list(gameData[0]). doesn't work matter which object, all of them has same user id.
+        // If there is an error inserting Game Record -> perform a rollback(by setting the rollback flag to true) and rejects the promise.
         db.run(insertGameSQL, [gameData[0].userId], function(err) {
           if (err) {
             db.run('ROLLBACK', (rollbackErr) => {
@@ -71,8 +75,9 @@ const saveGameResults = async (gameData) => {
             return;
           }
 
+          // Insert Round Record into rounds table
+          // If there is an error inserting the Round record -> perform a rollback(by setting the rollback flag to true) and rejects the promise.
           const gameId = this.lastID;
-
           gameData.forEach((round) => {
             db.run(insertRoundSQL, [gameId, round.meme_id, round.selected_caption_id, round.score], (err) => {
               if (err) {
@@ -89,6 +94,8 @@ const saveGameResults = async (gameData) => {
             });
           });
 
+
+          //If no errors occurred (rollback is false) -> commit the transaction with COMMIT
           if (!rollback) {
             db.run('COMMIT', (commitErr) => {
               if (commitErr) {

@@ -1,4 +1,3 @@
-/** NEW **/
 import sqlite from 'sqlite3';
 
 // open the database
