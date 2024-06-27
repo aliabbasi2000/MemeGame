@@ -7,7 +7,7 @@ import GameSummary from './GameSummary';
 import { useNavigate } from 'react-router-dom';
 
 const TOTAL_ROUNDS = 3;
-const ROUND_TIME = 3;
+const ROUND_TIME = 30;
 
 function Game(props) {
   const [round, setRound] = useState(0);
@@ -61,7 +61,7 @@ function Game(props) {
   
       const enhancedCaptions = fetchedCaptions.map((caption, index) => ({
         ...caption,
-        correct: index < 2,
+        correct: index < 2, // correct captions are the first two
         memeId: meme.id,
       }));
       const shuffledCaptions = shuffleArray(enhancedCaptions);
@@ -75,6 +75,7 @@ function Game(props) {
     }
   };
 
+  // fetch fetchMemeAndCaptions API when round changes
   useEffect(() => {
     if (round < TOTAL_ROUNDS) {
       fetchMemeAndCaptions();
@@ -84,29 +85,29 @@ function Game(props) {
     }
   }, [round]);
 
+  // set up an interval to decrease the timeer by 1 every 1000 msec (1sec)
   useEffect(() => {
     if (timer > 0 && !hasSelected) {
       const timerId = setInterval(() => {
         setTimer((prevTimer) => prevTimer - 1);
-      }, 1000);
+      }, 1000); 
       return () => clearInterval(timerId);
     } else if (timer === 0) {
       nextRound();
     }
-  }, [timer, hasSelected]);
+  }, [timer, hasSelected]); // runs whenever the timer or hasSelected state changes.
 
 
   //insuring that runs in strick mode
   //useEffect(() => {console.log("TEST STRICKT MODE")}, []);
 
 
+  // handle user cliks event
   const handleCaptionClick = (caption) => {
     const isCorrect = caption.correct;
     setSelectedCaptionId(caption.id);
-    setCaptionCorrectness((prevState) => ({
-      ...prevState,
-      [caption.id]: isCorrect,
-    }));
+    // update the state by the correctness of selected caption
+    setCaptionCorrectness((prevState) => ({...prevState, [caption.id]: isCorrect,}));
     setHasSelected(true);
 
     if (isCorrect) {
