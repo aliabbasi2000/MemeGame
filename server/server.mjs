@@ -217,7 +217,12 @@ app.post('/api/submitGameResults',isLoggedIn, [
   body('*.round').isInt().withMessage('Round should be an integer'),
   body('*.meme_id').isInt().withMessage('Meme ID should be an integer'),
   body('*.selected_caption_id').isInt().withMessage('Selected caption ID should be an integer'),
-  body('*.score').isInt().withMessage('Score should be an integer'),
+  body('*.score').isInt().withMessage('Score should be an integer ').custom(value => {
+    if (value !== 0 && value !== 5) {
+      throw new Error('Score should be either 0 or 5');
+    }
+    return true;
+  }),
   body().custom((value) => {
     if (value.length < 1 || value.length > 3) {
       throw new Error('Array length should be between 1 and 3');
