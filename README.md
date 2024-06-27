@@ -65,15 +65,15 @@ NOTE: The Validation of the selected Captions is not happening in the Server. Fr
 
 **Protected APIs**
 
-- GET /api/users/profile: Retrieves the profile information and game history of the authenticated user.
+- GET /api/users/profile?user_id=1: Retrieves the profile information and game history of the authenticated user.
   - Request Query: ?user_id=integer
-  - Response: { games: [{ gameId: integer, rounds: [{ roundId: integer, score: integer }] }] }
+  - Response: { games: [{ gameId: integer, rounds: [{ roundId: integer, selected_caption_id: integer, score: integer, meme_url: string }, ...] }] }
   - response status code:
       - 200: OK - Profile retrieved successfully.
       - 500: Internal Server Error - Failed to fetch user profile.
 
 - POST /api/submitGameResults: Saves game results on the server.
-  - Request Body: { userId: integer, gameId: integer, rounds: [{ roundId: integer, score: integer }] }
+  - Request Body: { userId: integer, round: integer, meme_id: integer, selected_caption_id: integer, score: integer] }
   - Response Status Codes:
       - 200: OK - Game results saved successfully.
       - 500: Internal Server Error - Error saving game results.
